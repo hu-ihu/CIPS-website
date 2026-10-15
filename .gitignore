@@ -1,24 +1,14 @@
-# Bundler
-Gemfile.lock
-/vendor/
-.bundle/
+# Build output
+dist/
+.astro/
 
-# Jekyll
-_site
-.git-metadata
-.jekyll-cache
-.jekyll-metadata
-.sass-cache
-
-# Our static content
-
-
-# Node.js stuff
-package-lock.json
+# Dependencies
 node_modules/
 
-# Misc
-.DS_Store
+# Local npm cache (kept inside the repo tree so that sandboxed runs stay writable)
+.npm-cache/
 
-# rbenv
-.ruby-version
+# Logs / OS noise
+*.log
+.DS_Store
+Thumbs.db

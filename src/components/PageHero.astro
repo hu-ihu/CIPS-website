@@ -1,0 +1,29 @@
+---
+interface Props {
+  title?: string;
+  tagline?: string;
+  image?: string;
+  /** 0 表示不压暗，0.2 约等于旧站 overlay_filter: 0.2 */
+  filter?: number;
+  action?: { label: string; url: string };
+}
+
+const { title, tagline, image, filter = 0.2, action } = Astro.props;
+const background = image
+  ? `linear-gradient(rgba(0, 0, 0, ${filter}), rgba(0, 0, 0, ${filter})), url('${image}')`
+  : undefined;
+---
+
+<section class="hero" style={background ? `background-image: ${background}` : undefined}>
+  <div class="hero__inner">
+    {title && <h1 class="hero__title">{title}</h1>}
+    {tagline && <p class="hero__tagline">{tagline}</p>}
+    {
+      action && (
+        <div class="hero__actions">
+          <a href={action.url}>{action.label}</a>
+        </div>
+      )
+    }
+  </div>
+</section>

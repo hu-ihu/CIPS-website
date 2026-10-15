@@ -1,21 +1,17 @@
 {
-  "name": "website",
-  "version": "0.0.1",
-  "description": "Prettier package.json for lug website",
-  "scripts": {
-    "check": "prettier . --check",
-    "fix": "prettier . --write"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NYIST-CIPS/website.git"
-  },
-  "license": "CC BY-NC-SA 4.0",
-  "bugs": {
-    "url": "https://github.com/NYIST-CIPS/website/issues"
-  },
+  "name": "cips-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "南阳理工学院-计算机与信息化处理协会 (CIPS @ NYIST) 官方网站",
   "homepage": "https://cips.nyist.edu.cn",
+  "license": "CC-BY-NC-SA-4.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/postbuild.mjs",
+    "preview": "astro preview"
+  },
   "devDependencies": {
-    "prettier": "^2.7.1"
+    "astro": "^7.4.0"
   }
 }

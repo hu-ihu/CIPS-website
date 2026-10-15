@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import TaxonomyGroups from '../../components/TaxonomyGroups.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { groupBy, published } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const news = published(await getCollection('news'));
+  const planet = published(await getCollection('planet'));
+  const groups = groupBy([...news, ...planet], 'tags');
+  return groups.map((group) => ({
+    params: { tag: group.name },
+    props: { group },
+  }));
+}
+
+const { group } = Astro.props;
+const newsIds = new Set((await getCollection('news')).map((entry) => entry.id));
+---
+
+<BaseLayout title={`标签：${group.name}`} wide>
+  <div class="prose">
+    <h1>标签：{group.name}</h1>
+    <p>
+      <a href="/tags/">← 返回全部标签</a>
+    </p>
+  </div>
+  <TaxonomyGroups field="tags" groups={[group]} newsIds={newsIds} />
+</BaseLayout>

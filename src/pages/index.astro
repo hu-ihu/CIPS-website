@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import PostList from '../components/PostList.astro';
+import ServiceTiles from '../components/ServiceTiles.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { published, sortByDateDesc } from '../utils/content';
+
+// 旧站首页只列出最新 5 篇 news，且不显示「最新文章」小标题
+const latest = sortByDateDesc(published(await getCollection('news'))).slice(0, 5);
+---
+
+<BaseLayout
+  title="CIPS @ NYIST"
+  tagline="南阳理工学院-计算机与信息化处理协会"
+  showHero
+  heroImage="/static/splash/nyist-1.jpg"
+  heroFilter={0.25}
+  action={{ label: '了解更多', url: '/wiki/intro/' }}
+  wide
+>
+  <ServiceTiles />
+  <PostList entries={latest} collection="news" />
+</BaseLayout>

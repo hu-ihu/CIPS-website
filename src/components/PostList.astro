@@ -1,0 +1,40 @@
+---
+import { plainExcerpt, postPath, type PostCollection, type PostEntry } from '../utils/content';
+
+interface Props {
+  entries: PostEntry[];
+  collection: PostCollection;
+  heading?: string;
+  /** 列表页展示摘要，首页只展示标题与日期 */
+  showExcerpt?: boolean;
+}
+
+const { entries, collection, heading, showExcerpt = true } = Astro.props;
+---
+
+<section class="archive">
+  {
+    heading && (
+      <h2 class="archive__subtitle">
+        <a href={`/${collection}/`}>{heading}</a>
+      </h2>
+    )
+  }
+  <ul class="archive__list">
+    {
+      entries.map((entry) => (
+        <li class="archive__item">
+          <h3 class="archive__item-title">
+            <a href={postPath(collection, entry)}>{entry.data.title}</a>
+          </h3>
+          <p class="archive__item-meta">
+            {entry.data.date}
+            {entry.data.author ? ` · ${entry.data.author}` : ''}
+            {entry.data.source ? ` · 来源：${entry.data.source}` : ''}
+          </p>
+          {showExcerpt && <p class="archive__item-excerpt">{plainExcerpt(entry.body)}</p>}
+        </li>
+      ))
+    }
+  </ul>
+</section>

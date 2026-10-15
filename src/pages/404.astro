@@ -1,0 +1,23 @@
+---
+import ServiceTiles from '../components/ServiceTiles.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout
+  title="404 Not Found"
+  tagline="你好像走错地方了，这个页面并不存在。如果你确信这里应该有个页面，请到本站仓库的 issue 区反馈问题。"
+  showHero
+  heroImage="/static/splash/nyist-1.jpg"
+  heroFilter={0.25}
+  action={{ label: '了解更多', url: '/wiki/intro/' }}
+  noindex
+  wide
+>
+  <ServiceTiles />
+  <p>
+    反馈地址：<a href={`${SITE.repository}/-/issues`} target="_blank" rel="noopener"
+      >{SITE.repository}/-/issues</a
+    >
+  </p>
+</BaseLayout>

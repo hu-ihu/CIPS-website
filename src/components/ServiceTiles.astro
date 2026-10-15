@@ -1,0 +1,35 @@
+---
+import { HOME_ABOUT, SERVICE_TILES } from '../data/site';
+
+const link = (item: (typeof SERVICE_TILES)['left'][number]) =>
+  item.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
+---
+
+<nav class="lug-nav" aria-label="服务入口">
+  <div class="lug-nav__left">
+    <div class="link-group">
+      {
+        SERVICE_TILES.left.map((item) => (
+          <a href={item.url} class={`bg-microsoft-${item.color}`} {...link(item)}>
+            <span>{item.title}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="lug-nav__right">
+    <div class="lug-nav__about">
+      {HOME_ABOUT.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+    <div class="link-group">
+      {
+        SERVICE_TILES.right.map((item) => (
+          <a href={item.url} class={`fg-microsoft-${item.color}`} {...link(item)}>
+            <span>{item.title}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</nav>

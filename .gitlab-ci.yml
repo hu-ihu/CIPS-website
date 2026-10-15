@@ -1,0 +1,51 @@
+# git.nyist.edu.cn 是 GitLab 实例（见 wiki/cips/services/gitlab），因此这里用 GitLab CI。
+# 分支策略：main = 源码；pages = 构建产物（dist 原样强推，纯静态、可直接托管）。
+# 需要配置的变量：PAGES_PUSH_TOKEN（见 README「CI 配置」一节）。
+
+stages: [build, deploy]
+
+variables:
+  GIT_DEPTH: "1"
+  ASTRO_TELEMETRY_DISABLED: "1" # 构建环境里没必要上报遥测
+  GIT_AUTHOR_NAME: "CIPS CI"
+  GIT_AUTHOR_EMAIL: "cips@nyist.edu.cn"
+  GIT_COMMITTER_NAME: "CIPS CI"
+  GIT_COMMITTER_EMAIL: "cips@nyist.edu.cn"
+
+default:
+  image: node:24 # Astro 7 要求 Node >= 22.22.0
+  # TODO(待确认)：如果学校 GitLab 的 Runner 配置了 tag，请在这里填上实际 tag（如 tags: [docker]）。
+  # 目前留空表示使用「不要求 tag」的共享 Runner。
+  tags: []
+  cache:
+    key:
+      files: [package-lock.json]
+    paths:
+      - .npm/
+
+# 只在 main 上跑，避免 pages 分支的构建提交反过来触发流水线。
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+build:
+  stage: build
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npm run build
+  artifacts:
+    paths: [dist]
+    expire_in: 1 week
+
+# 把 dist/ 原样强推到 pages 分支。CD 侧（学校 Web 服务器）监听 pages 分支即可，
+# 本仓库不负责部署，只保证 pages 分支是可直接托管的静态文件。
+deploy:pages:
+  stage: deploy
+  needs: [build]
+  script:
+    - cd dist
+    - git init -q -b pages
+    - git add -A
+    - git -c user.name="$GIT_AUTHOR_NAME" -c user.email="$GIT_AUTHOR_EMAIL" commit -q -m "chore: build ${CI_COMMIT_SHORT_SHA}"
+    - git push -f "https://oauth2:${PAGES_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" pages

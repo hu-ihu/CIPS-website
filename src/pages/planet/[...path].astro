@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionPage from '../../components/CollectionPage.astro';
+import { postPath, published, sortByDateDesc } from '../../utils/content';
+
+// 与 /news/ 同样的结构：一个 catch-all 产出文章页与分页列表页。
+// getStaticPaths 会被提升到模块作用域，常量必须定义在函数内部。
+export async function getStaticPaths() {
+  const collection = 'planet';
+  const perPage = 5;
+  const posts = sortByDateDesc(published(await getCollection(collection)));
+  const paths: {
+    params: { path: string | undefined };
+    props: Record<string, unknown>;
+  }[] = [];
+
+  for (const entry of posts) {
+    paths.push({
+      params: { path: postPath(collection, entry).replace(`/${collection}/`, '').replace(/\/$/, '') },
+      props: { kind: 'post', entry },
+    });
+  }
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / perPage));
+  for (let page = 1; page <= totalPages; page += 1) {
+    paths.push({
+      params: { path: page === 1 ? undefined : String(page) },
+      props: { kind: 'list', page, totalPages, posts },
+    });
+  }
+
+  return paths;
+}
+
+const { kind, entry, page, totalPages, posts } = Astro.props;
+---
+
+<CollectionPage
+  kind={kind}
+  collection="planet"
+  title="CIPS Planet"
+  tagline="A planet where ideas sparkle"
+  heroImage="/static/splash/galaxy-1.jpg"
+  entry={entry}
+  posts={posts}
+  page={page}
+  totalPages={totalPages}
+  perPage={5}
+/>

@@ -1,0 +1,39 @@
+---
+interface Props {
+  current: number;
+  total: number;
+  /** 列表页第一页地址，例如 /news/ */
+  base: string;
+}
+
+const { current, total, base } = Astro.props;
+// 旧站 jekyll-paginate-v2 的 permalink 是 /:num/，即第 2 页在 /news/2/
+const url = (page: number) => (page === 1 ? base : `${base}${page}/`);
+const pages = Array.from({ length: total }, (_, index) => index + 1);
+---
+
+{
+  total > 1 && (
+    <nav class="pagination" aria-label="分页导航">
+      {current > 1 && (
+        <a href={url(current - 1)} rel="prev">
+          上一页
+        </a>
+      )}
+      {pages.map((page) =>
+        page === current ? (
+          <span class="current" aria-current="page">
+            {page}
+          </span>
+        ) : (
+          <a href={url(page)}>{page}</a>
+        ),
+      )}
+      {current < total && (
+        <a href={url(current + 1)} rel="next">
+          下一页
+        </a>
+      )}
+    </nav>
+  )
+}

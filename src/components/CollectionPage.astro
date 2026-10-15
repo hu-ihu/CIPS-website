@@ -1,0 +1,60 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostLayout from '../layouts/PostLayout.astro';
+import Paginator from './Paginator.astro';
+import PostList from './PostList.astro';
+import type { PostCollection, PostEntry } from '../utils/content';
+
+interface Props {
+  kind: 'post' | 'list';
+  collection: PostCollection;
+  /** 列表页标题，例如「CIPS 新闻」 */
+  title: string;
+  heroImage: string;
+  tagline?: string;
+  entry?: PostEntry;
+  posts?: PostEntry[];
+  page?: number;
+  totalPages?: number;
+  perPage?: number;
+}
+
+const {
+  kind,
+  collection,
+  title,
+  heroImage,
+  tagline,
+  entry,
+  posts = [],
+  page = 1,
+  totalPages = 1,
+  perPage = 5,
+} = Astro.props;
+
+const Content = kind === 'post' && entry ? (await render(entry)).Content : null;
+const pagePosts = posts.slice((page - 1) * perPage, page * perPage);
+---
+
+{
+  kind === 'post' && entry ? (
+    <PostLayout
+      title={entry.data.title}
+      collection={collection}
+      date={entry.data.date}
+      author={entry.data.author}
+      source={entry.data.source}
+      categories={entry.data.categories}
+      tags={entry.data.tags}
+      heroImage={heroImage}
+    >
+      {Content && <Content />}
+    </PostLayout>
+  ) : (
+    <BaseLayout title={title} tagline={tagline} showHero heroImage={heroImage} heroFilter={0.2} wide>
+      <PostList entries={pagePosts} collection={collection} />
+      <Paginator current={page} total={totalPages} base={`/${collection}/`} />
+    </BaseLayout>
+  )
+}

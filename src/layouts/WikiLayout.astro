@@ -1,0 +1,40 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import WikiSidebar from '../components/WikiSidebar.astro';
+
+interface Props {
+  title: string;
+  headings?: { depth: number; slug: string; text: string }[];
+  toc?: boolean;
+}
+
+const { title, headings = [], toc = true } = Astro.props;
+const tocItems = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const showToc = toc && tocItems.length > 1;
+---
+
+<BaseLayout title={title} wide>
+  <div class:list={['wiki', { 'wiki--with-toc': showToc }]}>
+    <WikiSidebar />
+
+    <article class="prose">
+      <h1>{title}</h1>
+      <slot />
+    </article>
+
+    {
+      showToc && (
+        <aside class="wiki__toc" aria-label="目录">
+          <h2 class="archive__subtitle">目录</h2>
+          <ul>
+            {tocItems.map((heading) => (
+              <li class:list={[`toc-depth-${heading.depth}`]}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>

@@ -1,0 +1,234 @@
+[
+  {
+    "from": "/wiki/mirrors/help/alpine/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/anthon/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/aosp/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/archive.raspberrypi.org/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/archlinux/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/archlinuxarm/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/archlinuxcn/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/blackarch/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/brew.git/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/brew/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/centos/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/chakra/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/cpan/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/cran/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/ctex/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/debian-backports/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/debian-multimedia/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/debian-security/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/debian/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/docker/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/dotdeb/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/eclipse/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/epel/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/fedora/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/freebsd/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/gentoo-portage/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/gentoo/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/homebrew-bottles/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/homebrew-core.git/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/homebrew.git/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/homebrew/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/infinality-bundle/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/kali/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/kde/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/kdemod/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/kodi/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/linux.git/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/linux/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/linuxmint/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/mariadb/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/msys2/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/opensuse/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/openwrt/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/pypi/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/qtproject/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/raspbian/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/revproxy/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/ros/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/rpmfusion/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/rubygems/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/rust-crates/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/rust-static/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/scientificlinux/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/trisquel/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/ubuntu/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/uksm-kernel/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/ustclug/",
+    "to": "/wiki/mirrors/help/"
+  },
+  {
+    "from": "/wiki/mirrors/help/xbmc/",
+    "to": "/wiki/mirrors/help/"
+  }
+]

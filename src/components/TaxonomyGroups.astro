@@ -1,0 +1,36 @@
+---
+import PostList from './PostList.astro';
+import type { PostEntry } from '../utils/content';
+
+interface Props {
+  field: 'categories' | 'tags';
+  groups: { name: string; entries: PostEntry[] }[];
+  /** 用于把条目分流到 news / planet 两个列表（两者 URL 规则不同） */
+  newsIds: Set<string>;
+}
+
+const { field, groups, newsIds } = Astro.props;
+const base = `/${field}/`;
+const label = field === 'categories' ? '分类' : '标签';
+---
+
+{
+  groups.length === 0 && <p>暂无{label}。</p>
+}
+
+{
+  groups.map((group) => {
+    const news = group.entries.filter((entry) => newsIds.has(entry.id));
+    const planet = group.entries.filter((entry) => !newsIds.has(entry.id));
+    return (
+      <section class="archive">
+        <h2 class="archive__subtitle">
+          <a href={`${base}${encodeURIComponent(group.name)}/`}>{group.name}</a>
+          <span class="archive__item-meta">（{group.entries.length}）</span>
+        </h2>
+        {news.length > 0 && <PostList entries={news} collection="news" />}
+        {planet.length > 0 && <PostList entries={planet} collection="planet" />}
+      </section>
+    );
+  })
+}

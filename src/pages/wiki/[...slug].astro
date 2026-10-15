@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from 'astro:content';
+import WikiLayout from '../../layouts/WikiLayout.astro';
+import { wikiPath } from '../../utils/content';
+import redirects from '../../data/wiki-redirects.json';
+
+/**
+ * Wiki 是站内固定文档。这里同时产出两类页面：
+ *  - 真正的 wiki 页面（URL 来自旧站 permalink 或内容路径）
+ *  - 旧站 jekyll-redirect-from 生成的跳转页（/wiki/mirrors/help/<镜像名>/）
+ * 放在同一条 catch-all 路由里，避免两条动态路由互相冲突。
+ */
+export async function getStaticPaths() {
+  const entries = await getCollection('wiki');
+  const paths: {
+    params: { slug: string | undefined };
+    props: Record<string, unknown>;
+  }[] = [];
+
+  for (const entry of entries) {
+    const slug = wikiPath(entry).replace(/^\/wiki\/?/, '').replace(/\/$/, '');
+    paths.push({ params: { slug: slug === '' ? undefined : slug }, props: { kind: 'wiki', entry } });
+  }
+
+  for (const redirect of redirects) {
+    const slug = redirect.from.replace(/^\/wiki\/?/, '').replace(/\/$/, '');
+    paths.push({ params: { slug }, props: { kind: 'redirect', to: redirect.to } });
+  }
+
+  return paths;
+}
+
+const { kind, entry, to } = Astro.props;
+const rendered = kind === 'wiki' ? await render(entry) : null;
+const Content = rendered?.Content ?? null;
+const headings = rendered?.headings ?? [];
+---
+
+{
+  kind === 'redirect' ? (
+    <html lang="zh-CN">
+      <head>
+        <meta charset="utf-8" />
+        <title>页面已迁移</title>
+        <link rel="canonical" href={to} />
+        <meta http-equiv="refresh" content={`0; url=${to}`} />
+        <meta name="robots" content="noindex" />
+      </head>
+      <body>
+        <p>
+          该页面已迁移至 <a href={to}>{to}</a>。
+        </p>
+      </body>
+    </html>
+  ) : (
+    <WikiLayout title={entry.data.title} headings={headings} toc={entry.data.toc}>
+      {Content && <Content />}
+    </WikiLayout>
+  )
+}

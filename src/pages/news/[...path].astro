@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionPage from '../../components/CollectionPage.astro';
+import { postPath, published, sortByDateDesc } from '../../utils/content';
+
+// 一个 catch-all 同时产出文章页与分页列表页（/news/、/news/2/），
+// 这样 /news/<年份>/<月份>/<slug>/ 与 /news/<页码>/ 不会形成两条互相冲突的动态路由。
+// 注意：getStaticPaths 会被提升到模块作用域，因此它用到的常量必须定义在函数内部。
+export async function getStaticPaths() {
+  const collection = 'news';
+  const perPage = 5;
+  const posts = sortByDateDesc(published(await getCollection(collection)));
+  const paths: {
+    params: { path: string | undefined };
+    props: Record<string, unknown>;
+  }[] = [];
+
+  for (const entry of posts) {
+    paths.push({
+      params: { path: postPath(collection, entry).replace(`/${collection}/`, '').replace(/\/$/, '') },
+      props: { kind: 'post', entry },
+    });
+  }
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / perPage));
+  for (let page = 1; page <= totalPages; page += 1) {
+    paths.push({
+      params: { path: page === 1 ? undefined : String(page) },
+      props: { kind: 'list', page, totalPages, posts },
+    });
+  }
+
+  return paths;
+}
+
+const { kind, entry, page, totalPages, posts } = Astro.props;
+---
+
+<CollectionPage
+  kind={kind}
+  collection="news"
+  title="CIPS 新闻"
+  heroImage="/static/splash/nyist-1.jpg"
+  entry={entry}
+  posts={posts}
+  page={page}
+  totalPages={totalPages}
+  perPage={5}
+/>

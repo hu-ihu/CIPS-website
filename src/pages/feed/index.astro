@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../data/site';
+
+const feeds = [
+  { label: '订阅全部内容', path: '/feed.xml' },
+  { label: '订阅 CIPS 新闻', path: '/feed/news.xml' },
+  { label: '订阅 CIPS Planet', path: '/feed/planet.xml' },
+];
+---
+
+<BaseLayout
+  title="RSS 订阅"
+  tagline="计算机与信息化处理协会"
+  showHero
+  heroImage="/static/splash/nyist-1.jpg"
+  heroFilter={0.25}
+  wide
+>
+  <div class="prose">
+    <h1>RSS 订阅</h1>
+    <p>本站提供以下 RSS 订阅源，把链接添加到阅读器即可：</p>
+    <ul>
+      {
+        feeds.map((feed) => (
+          <li>
+            {feed.label}：<a href={feed.path}>{new URL(feed.path, SITE.url).href}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>

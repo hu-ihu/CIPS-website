@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import TaxonomyGroups from '../../components/TaxonomyGroups.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { groupBy, published } from '../../utils/content';
+
+const news = published(await getCollection('news'));
+const planet = published(await getCollection('planet'));
+const newsIds = new Set(news.map((entry) => entry.id));
+const groups = groupBy([...news, ...planet], 'categories');
+---
+
+<BaseLayout title="按目录归类" wide>
+  <div class="prose">
+    <h1>按目录归类</h1>
+    {
+      groups.length > 0 && (
+        <ul class="taxonomy">
+          {groups.map((group) => (
+            <li>
+              <a href={`/categories/${encodeURIComponent(group.name)}/`}>
+                {group.name}（{group.entries.length}）
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+  <TaxonomyGroups field="categories" groups={groups} newsIds={newsIds} />
+</BaseLayout>

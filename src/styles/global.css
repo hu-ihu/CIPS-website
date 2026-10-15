@@ -1,0 +1,719 @@
+/* ==========================================================================
+   CIPS @ NYIST — 全局样式
+   旧站基于 minimal-mistakes 主题（SCSS + Font Awesome），重建后只保留这套
+   自写的纯 CSS，颜色与版式沿用旧站皮肤（_sass/skin.scss、footer.scss 等）。
+   ========================================================================== */
+
+:root {
+  --bg: #f3f6f6;
+  --surface: #ffffff;
+  --text: #514640;
+  --text-muted: #7a6f69;
+  --primary: #9e1111;
+  --link: #ad3535;
+  --border: #d6d0ce;
+  --footer-bg: #684040;
+  --footer-text: #f6efef;
+  --panel: #eeeeee;
+
+  --microsoft-red: #f25022;
+  --microsoft-green: #7fba00;
+  --microsoft-blue: #00a4ef;
+  --microsoft-yellow: #ffb900;
+
+  --wrap: 1200px;
+  --radius: 6px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Noto Sans', 'Open Sans', 'Roboto', 'Segoe UI',
+    'Helvetica Neue', 'Lucida Grande', 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+  --font-mono: Monaco, Consolas, 'Lucida Console', monospace;
+}
+
+/* --------------------------------------------------------------- base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--surface);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--link);
+  overflow-wrap: break-word;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.wrap--wide {
+  max-width: 1440px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------- masthead */
+
+.masthead {
+  background: var(--bg);
+}
+
+.masthead__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.masthead__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.masthead__brand img {
+  display: block;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.masthead__nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.masthead__nav a {
+  display: inline-block;
+  padding: 0.25rem 0;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.masthead__nav a:hover,
+.masthead__nav a.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ----------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 14rem;
+  margin-bottom: 1rem;
+  padding: 3rem 1rem;
+  background-color: #2b2320;
+  background-position: center;
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+}
+
+.hero__inner {
+  max-width: 48rem;
+}
+
+.hero__title {
+  margin: 0 0 0.5rem;
+  font-size: 2.1rem;
+  line-height: 1.25;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.hero__tagline {
+  margin: 0 auto;
+  max-width: 40rem;
+  font-size: 1rem;
+  opacity: 0.95;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.hero__actions {
+  margin-top: 1.25rem;
+}
+
+.hero__actions a {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius);
+  color: #fff;
+  text-decoration: none;
+}
+
+.hero__actions a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------ home tiles */
+
+.lug-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+
+.lug-nav__left,
+.lug-nav__right {
+  flex: 1 1 20rem;
+  min-width: 0;
+  background: var(--panel);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.lug-nav__right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: transparent;
+}
+
+.lug-nav__about {
+  padding: 1rem;
+  background: var(--panel);
+  border-radius: var(--radius);
+}
+
+.lug-nav__about p {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.lug-nav__about p:last-child {
+  margin-bottom: 0;
+}
+
+.link-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.link-group a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.25rem 0.5rem;
+  color: #444;
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.link-group a:hover {
+  color: var(--primary);
+}
+
+.link-group a::before {
+  content: '';
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.bg-microsoft-red {
+  background-color: rgba(242, 80, 34, 0.1);
+}
+.bg-microsoft-green {
+  background-color: rgba(127, 186, 0, 0.1);
+}
+.bg-microsoft-blue {
+  background-color: rgba(0, 164, 239, 0.1);
+}
+.bg-microsoft-yellow {
+  background-color: rgba(255, 185, 0, 0.1);
+}
+.fg-microsoft-red {
+  color: color-mix(in srgb, var(--microsoft-red) 62%, var(--text));
+}
+.fg-microsoft-green {
+  color: color-mix(in srgb, var(--microsoft-green) 62%, var(--text));
+}
+.fg-microsoft-blue {
+  color: color-mix(in srgb, var(--microsoft-blue) 62%, var(--text));
+}
+.fg-microsoft-yellow {
+  color: color-mix(in srgb, var(--microsoft-yellow) 62%, var(--text));
+}
+
+/* -------------------------------------------------------- archive lists */
+
+.archive {
+  margin: 1rem 0 2rem;
+}
+
+.archive__subtitle {
+  margin: 0 0 0.75rem;
+  font-size: 1.33rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25rem;
+}
+
+.archive__subtitle a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.archive__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archive__item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.archive__item-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+}
+
+.archive__item-title a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.archive__item-title a:hover {
+  text-decoration: underline;
+}
+
+.archive__item-meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.archive__item-excerpt {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.taxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.taxonomy a {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--panel);
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-block;
+  min-width: 2rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  text-decoration: none;
+}
+
+.pagination .current {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------ wiki layout */
+
+.wiki {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1rem 0 2rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .wiki {
+    grid-template-columns: 15rem minmax(0, 1fr);
+  }
+  .wiki--with-toc {
+    grid-template-columns: 15rem minmax(0, 1fr) 13rem;
+  }
+}
+
+.wiki__sidebar,
+.wiki__toc {
+  font-size: 0.85rem;
+}
+
+.wiki__sidebar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
+.wiki__sidebar h2 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.wiki__sidebar h2:first-child {
+  margin-top: 0;
+}
+
+.wiki__sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wiki__sidebar li {
+  line-height: 1.9;
+}
+
+.wiki__sidebar a {
+  text-decoration: none;
+}
+
+.wiki__sidebar a:hover,
+.wiki__sidebar a.active {
+  text-decoration: underline;
+  color: var(--primary);
+}
+
+.wiki__toc {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
+.wiki__toc ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wiki__toc li {
+  line-height: 1.6;
+}
+
+.wiki__toc .toc-depth-3 {
+  padding-left: 0.75rem;
+}
+
+/* -------------------------------------------------------------- prose */
+
+.prose {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose h1 {
+  font-size: 1.9rem;
+  margin: 0 0 1rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 0.75rem;
+}
+
+.prose h3 {
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-size: 1.05rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 1rem;
+}
+
+.prose li p {
+  margin-bottom: 0;
+}
+
+.prose img {
+  display: block;
+  max-width: 70%;
+  margin: 1rem auto;
+}
+
+.prose blockquote {
+  margin: 1rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 4px solid var(--border);
+  color: var(--text-muted);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  background: #f6f6f6;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 1rem auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.6rem;
+  text-align: left;
+}
+
+.prose th {
+  background: var(--panel);
+}
+
+.prose hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* 旧站 kramdown 的段落属性 {: .notice--warning } 由迁移脚本转成这个块 */
+.notice {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--microsoft-yellow);
+  background: rgba(255, 185, 0, 0.12);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.notice p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------- post header */
+
+.post__header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.post__meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.post__footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------- footer */
+
+#footer {
+  margin-top: 2rem;
+  background: var(--footer-bg);
+  color: var(--footer-text);
+}
+
+#footer a {
+  color: inherit;
+}
+
+.footer__inner {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.footer-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .footer-row {
+    flex-direction: row;
+  }
+}
+
+.footer-block {
+  font-size: 0.75rem;
+}
+
+.footer__about {
+  flex: 1 1 40%;
+}
+
+.footer__about p {
+  margin: 0 0 0.5rem;
+}
+
+.footer__extras {
+  display: flex;
+  flex: 1 1 55%;
+  gap: 1rem;
+}
+
+.footer__extras > div {
+  flex: 1 1 0;
+}
+
+.footer__contact ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__contact li {
+  margin-bottom: 0.25rem;
+}
+
+.footer__logo img {
+  display: block;
+  max-width: 100%;
+  max-height: 8rem;
+}
+
+.footer-legal {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.7rem;
+  line-height: 1.8;
+}
+
+.footer-legal p {
+  margin: 0;
+}

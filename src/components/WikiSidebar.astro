@@ -1,0 +1,25 @@
+---
+import { WIKI_NAV } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (url: string) => !url.startsWith('http') && url !== '/' && path.startsWith(url);
+---
+
+<nav class="wiki__sidebar" aria-label="Wiki 导航">
+  {
+    WIKI_NAV.map((group) => (
+      <>
+        <h2>{group.title}</h2>
+        <ul>
+          {group.children.map((item) => (
+            <li>
+              <a href={item.url} class:list={[{ active: isActive(item.url) }]}>
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
+</nav>

@@ -1,0 +1,32 @@
+---
+import { MAIN_NAV, SITE } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (url: string) => !url.startsWith('http') && (url === '/' ? path === '/' : path.startsWith(url));
+---
+
+<header class="masthead">
+  <div class="masthead__inner wrap">
+    <a class="masthead__brand" href="/">
+      <img src="/static/lug-penguin.png" alt="" width="36" height="36" />
+      <span>{SITE.title}</span>
+    </a>
+    <nav class="masthead__nav" aria-label="主导航">
+      <ul>
+        {
+          MAIN_NAV.map((item) => (
+            <li>
+              <a
+                href={item.url}
+                class:list={[{ active: isActive(item.url) }]}
+                {...('external' in item && item.external ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                {item.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
