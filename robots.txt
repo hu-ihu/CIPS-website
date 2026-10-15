@@ -1,0 +1,3 @@
+User-Agent: *
+Allow: /
+Sitemap: https://cips.nyist.edu.cn/sitemap.xml
