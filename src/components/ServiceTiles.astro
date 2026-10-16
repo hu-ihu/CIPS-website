@@ -1,8 +1,9 @@
 ---
+import Icon from './Icon.astro';
 import { HOME_ABOUT, SERVICE_TILES } from '../data/site';
 
-const link = (item: (typeof SERVICE_TILES)['left'][number]) =>
-  item.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
+const link = (item: { url: string; external?: boolean }) =>
+  item.external ? { target: '_blank', rel: 'noopener' } : {};
 ---
 
 <nav class="lug-nav" aria-label="服务入口">
@@ -10,7 +11,8 @@ const link = (item: (typeof SERVICE_TILES)['left'][number]) =>
     <div class="link-group">
       {
         SERVICE_TILES.left.map((item) => (
-          <a href={item.url} class={`bg-microsoft-${item.color}`} {...link(item)}>
+          <a href={item.url} class={`tile tile--${item.color}`} {...link(item)}>
+            <Icon name={item.icon} size={44} strokeWidth={1.5} class="tile__icon" />
             <span>{item.title}</span>
           </a>
         ))
@@ -25,7 +27,8 @@ const link = (item: (typeof SERVICE_TILES)['left'][number]) =>
     <div class="link-group">
       {
         SERVICE_TILES.right.map((item) => (
-          <a href={item.url} class={`fg-microsoft-${item.color}`} {...link(item)}>
+          <a href={item.url} class={`tile tile--${item.color} tile--plain`} {...link(item)}>
+            <Icon name={item.icon} size={44} strokeWidth={1.5} class="tile__icon" />
             <span>{item.title}</span>
           </a>
         ))

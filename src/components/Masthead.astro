@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { MAIN_NAV, SITE } from '../data/site';
 
 const path = Astro.url.pathname;
@@ -19,9 +20,10 @@ const isActive = (url: string) => !url.startsWith('http') && (url === '/' ? path
               <a
                 href={item.url}
                 class:list={[{ active: isActive(item.url) }]}
-                {...('external' in item && item.external ? { target: '_blank', rel: 'noopener' } : {})}
+                {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
               >
-                {item.title}
+                <Icon name={item.icon} size={17} />
+                <span>{item.title}</span>
               </a>
             </li>
           ))

@@ -1,0 +1,30 @@
+---
+import { ICONS, type IconName } from '../utils/icons';
+
+interface Props {
+  /** src/utils/icons.ts 中的图标名 */
+  name: IconName;
+  /** 边长（px），图标是正方形的 */
+  size?: number;
+  class?: string;
+  /** 描边粗细：小尺寸用默认值，大尺寸（磁贴）可略微调细 */
+  strokeWidth?: number;
+}
+
+const { name, size = 20, class: className, strokeWidth = 1.75 } = Astro.props;
+---
+
+<svg
+  class:list={['icon', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={ICONS[name]}
+/>

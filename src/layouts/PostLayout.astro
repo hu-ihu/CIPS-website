@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/Icon.astro';
 import type { PostCollection } from '../utils/content';
 
 interface Props {
@@ -27,16 +28,36 @@ const {
   heroFilter = 0.2,
 } = Astro.props;
 
-const meta = [date, author ? `作者：${author}` : '', source ? `来源：${source}` : '']
+// hero 上的副标题用纯文本（图片上不放图标）
+const tagline = [date, author ? `作者：${author}` : '', source ? `来源：${source}` : '']
   .filter(Boolean)
   .join(' · ');
 ---
 
-<BaseLayout title={title} showHero tagline={meta} heroImage={heroImage} heroFilter={heroFilter}>
+<BaseLayout title={title} showHero tagline={tagline} heroImage={heroImage} heroFilter={heroFilter}>
   <article class="prose">
     <div class="post__header">
       <h1>{title}</h1>
-      <p class="post__meta">{meta}</p>
+      <p class="post__meta">
+        <span class="meta__item">
+          <Icon name="calendar" size={15} />
+          <time datetime={date}>{date}</time>
+        </span>
+        {
+          author && (
+            <span class="meta__item">
+              <Icon name="user" size={15} />作者：{author}
+            </span>
+          )
+        }
+        {
+          source && (
+            <span class="meta__item">
+              <Icon name="link" size={15} />来源：{source}
+            </span>
+          )
+        }
+      </p>
     </div>
 
     <slot />

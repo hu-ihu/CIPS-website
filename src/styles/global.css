@@ -103,6 +103,14 @@ img {
   white-space: nowrap;
 }
 
+/* ---------------------------------------------------------------- icons */
+
+/* 图标（src/components/Icon.astro）默认跟随文字颜色，这里只负责在行内对齐 */
+.icon {
+  flex: none;
+  vertical-align: -0.15em;
+}
+
 /* ------------------------------------------------------------- masthead */
 
 .masthead {
@@ -145,17 +153,29 @@ img {
 }
 
 .masthead__nav a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0.25rem 0;
   color: var(--text);
   text-decoration: none;
   border-bottom: 2px solid transparent;
 }
 
+.masthead__nav .icon {
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
 .masthead__nav a:hover,
 .masthead__nav a.active {
   color: var(--primary);
   border-bottom-color: var(--primary);
+}
+
+.masthead__nav a:hover .icon,
+.masthead__nav a.active .icon {
+  color: var(--primary);
 }
 
 /* ----------------------------------------------------------------- hero */
@@ -230,6 +250,18 @@ img {
   overflow: hidden;
 }
 
+.lug-nav__left {
+  display: flex;
+  padding: 0.6rem;
+}
+
+/* 左栏面板会被右栏（简介 + 磁贴）撑高，让 2×2 磁贴均分整块高度，
+   否则下方会留出一大片空面板 */
+.lug-nav__left .link-group {
+  flex: 1;
+  grid-auto-rows: 1fr;
+}
+
 .lug-nav__right {
   display: flex;
   flex-direction: column;
@@ -255,58 +287,73 @@ img {
 .link-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
 }
 
-.link-group a {
+/* 服务磁贴：左侧浅色底、右侧留白，图标用各自的强调色。
+   旧站这里是 Font Awesome 的 fa-5x 图标 + bg-/fg-microsoft-* 工具类。 */
+.tile {
+  --tile-accent: var(--text-muted);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1.25rem 0.5rem;
-  color: #444;
+  gap: 0.6rem;
+  padding: 1.4rem 0.5rem;
+  color: var(--text);
   text-align: center;
   text-decoration: none;
   font-size: 0.9rem;
+  transition: background-color 0.15s ease;
 }
 
-.link-group a:hover {
-  color: var(--primary);
+.tile .tile__icon {
+  color: var(--tile-accent);
+  transition: transform 0.15s ease;
 }
 
-.link-group a::before {
-  content: '';
-  display: block;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.25;
+.tile:hover .tile__icon {
+  transform: translateY(-2px);
 }
 
-.bg-microsoft-red {
-  background-color: rgba(242, 80, 34, 0.1);
+.tile--red {
+  --tile-accent: var(--microsoft-red);
 }
-.bg-microsoft-green {
-  background-color: rgba(127, 186, 0, 0.1);
+
+.tile--green {
+  --tile-accent: var(--microsoft-green);
 }
-.bg-microsoft-blue {
-  background-color: rgba(0, 164, 239, 0.1);
+
+.tile--blue {
+  --tile-accent: var(--microsoft-blue);
 }
-.bg-microsoft-yellow {
-  background-color: rgba(255, 185, 0, 0.1);
+
+.tile--yellow {
+  --tile-accent: var(--microsoft-yellow);
 }
-.fg-microsoft-red {
-  color: color-mix(in srgb, var(--microsoft-red) 62%, var(--text));
+
+.lug-nav__left .tile {
+  background: color-mix(in srgb, var(--tile-accent) 12%, transparent);
 }
-.fg-microsoft-green {
-  color: color-mix(in srgb, var(--microsoft-green) 62%, var(--text));
+
+.lug-nav__left .tile:hover {
+  background: color-mix(in srgb, var(--tile-accent) 22%, transparent);
 }
-.fg-microsoft-blue {
-  color: color-mix(in srgb, var(--microsoft-blue) 62%, var(--text));
+
+.lug-nav__right .tile {
+  border-radius: var(--radius);
 }
-.fg-microsoft-yellow {
-  color: color-mix(in srgb, var(--microsoft-yellow) 62%, var(--text));
+
+.lug-nav__right .tile:hover {
+  background: color-mix(in srgb, var(--tile-accent) 10%, transparent);
+}
+
+/* 宽屏时左栏磁贴更高，图标相应放大（旧站这里是 fa-5x 的大图标） */
+@media (min-width: 900px) {
+  .lug-nav__left .tile__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
 }
 
 /* -------------------------------------------------------- archive lists */
@@ -353,9 +400,20 @@ img {
 }
 
 .archive__item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.9rem;
   margin: 0 0 0.35rem;
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+/* 日期 / 作者 / 来源这类元信息：图标与文字成组，组间用 gap 分隔 */
+.meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .archive__item-excerpt {
@@ -463,12 +521,25 @@ img {
 }
 
 .wiki__sidebar a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   text-decoration: none;
+}
+
+.wiki__sidebar .icon {
+  color: var(--text-muted);
+  transition: color 0.15s ease;
 }
 
 .wiki__sidebar a:hover,
 .wiki__sidebar a.active {
   text-decoration: underline;
+  color: var(--primary);
+}
+
+.wiki__sidebar a:hover .icon,
+.wiki__sidebar a.active .icon {
   color: var(--primary);
 }
 
@@ -603,13 +674,44 @@ img {
   border-top: 1px solid var(--border);
 }
 
-/* 旧站 kramdown 的段落属性 {: .notice--warning } 由迁移脚本转成这个块 */
+/* 旧站 kramdown 的段落属性 {: .notice--warning } 由迁移脚本转成这个块。
+   旧站在正文里手写 <i class="fas fa-fw fa-exclamation-circle">，这里改由 CSS 用
+   mask 贴图标（正文保持干净），颜色跟随 currentColor。 */
+:root {
+  --icon-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5.4'/%3E%3Ccircle cx='12' cy='7.6' r='.95' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+  --icon-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.6v5.4'/%3E%3Ccircle cx='12' cy='16.4' r='.95' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+}
+
 .notice {
+  position: relative;
   margin: 1rem 0;
-  padding: 0.75rem 1rem;
-  border-left: 4px solid var(--microsoft-yellow);
-  background: rgba(255, 185, 0, 0.12);
+  padding: 0.75rem 1rem 0.75rem 2.6rem;
+  border-left: 4px solid var(--microsoft-blue);
+  background: rgba(0, 164, 239, 0.1);
   border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.notice::before {
+  content: '';
+  position: absolute;
+  left: 0.95rem;
+  top: 0.95rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  background-color: currentColor;
+  opacity: 0.7;
+  -webkit-mask: var(--icon-info) center / contain no-repeat;
+  mask: var(--icon-info) center / contain no-repeat;
+}
+
+.notice--warning {
+  border-left-color: var(--microsoft-yellow);
+  background: rgba(255, 185, 0, 0.12);
+}
+
+.notice--warning::before {
+  -webkit-mask-image: var(--icon-alert);
+  mask-image: var(--icon-alert);
 }
 
 .notice p {
@@ -625,6 +727,10 @@ img {
 }
 
 .post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.9rem;
   margin: 0;
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -698,6 +804,17 @@ img {
 
 .footer__contact li {
   margin-bottom: 0.25rem;
+}
+
+.footer__contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.footer__contact a:hover {
+  text-decoration: underline;
 }
 
 .footer__logo img {

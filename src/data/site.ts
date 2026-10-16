@@ -1,3 +1,5 @@
+import type { IconName } from '../utils/icons';
+
 /**
  * 站点级配置。
  *
@@ -29,75 +31,103 @@ export const SITE = {
   },
 } as const;
 
-/** 顶部主导航 */
-export const MAIN_NAV = [
-  { title: 'Wiki', url: '/wiki/' },
-  { title: 'News', url: '/news/' },
-  { title: 'Planet', url: '/planet/' },
-  { title: '代码托管', url: SITE.gitlab, external: true },
-  { title: '镜像站', url: SITE.mirrors, external: true },
-] as const;
+export interface NavItem {
+  title: string;
+  url: string;
+  /** 图标名，见 src/utils/icons.ts */
+  icon: IconName;
+  /** 站外链接（新窗口打开） */
+  external?: boolean;
+}
+
+export interface NavGroup {
+  title: string;
+  children: NavItem[];
+}
+
+export type TileColor = 'red' | 'green' | 'blue' | 'yellow';
+
+export interface Tile extends NavItem {
+  color: TileColor;
+}
+
+/**
+ * 顶部主导航。
+ * 旧站是「Wiki / News / Planet / GitHub / Mirrors」，本站把 GitHub 换成了
+ * git.nyist 的 GitLab（代码托管），镜像站保持原样。
+ */
+export const MAIN_NAV: NavItem[] = [
+  { title: 'Wiki', url: '/wiki/', icon: 'book' },
+  { title: 'News', url: '/news/', icon: 'newspaper' },
+  { title: 'Planet', url: '/planet/', icon: 'planet' },
+  { title: '代码托管', url: SITE.gitlab, icon: 'git-branch', external: true },
+  { title: '镜像站', url: SITE.mirrors, icon: 'server', external: true },
+];
 
 /** Wiki 左侧导航，对应旧站 _data/navigation.yml 的 wiki 段 */
-export const WIKI_NAV = [
+export const WIKI_NAV: NavGroup[] = [
   {
     title: 'CIPS @ NYIST',
     children: [
-      { title: 'CIPS 首页', url: '/' },
-      { title: 'CIPS 新闻', url: '/news/' },
-      { title: '友情链接', url: '/wiki/cips/links/' },
-      { title: '开源软件镜像', url: '/wiki/server/mirrors/' },
+      { title: 'CIPS 首页', url: '/', icon: 'home' },
+      { title: 'CIPS 新闻', url: '/news/', icon: 'newspaper' },
+      { title: '友情链接', url: '/wiki/cips/links/', icon: 'link' },
+      { title: '开源软件镜像', url: '/wiki/server/mirrors/', icon: 'database' },
     ],
   },
   {
     title: '活动',
     children: [
-      { title: 'CIPS 活动', url: '/wiki/cips/events/' },
-      { title: '邮件列表', url: '/wiki/cips/mailinglist/' },
+      { title: 'CIPS 活动', url: '/wiki/cips/events/', icon: 'sparkles' },
+      { title: '邮件列表', url: '/wiki/cips/mailinglist/', icon: 'envelope' },
     ],
   },
   {
     title: '服务',
     children: [
-      { title: '镜像站', url: '/wiki/cips/services/mirrors/' },
-      { title: 'Git 服务', url: '/wiki/cips/services/gitlab/' },
-      { title: 'PXE 服务', url: '/wiki/cips/services/pxe/' },
+      { title: '镜像站', url: '/wiki/cips/services/mirrors/', icon: 'server' },
+      { title: 'Git 服务', url: '/wiki/cips/services/gitlab/', icon: 'git-branch' },
+      { title: 'PXE 服务', url: '/wiki/cips/services/pxe/', icon: 'deploy' },
     ],
   },
   {
     title: '联系',
     children: [
-      { title: 'CIPS 负责人', url: '/wiki/cips/person-in-charge/' },
-      { title: '联系我们', url: '/wiki/cips/contact/' },
-      { title: '加入我们', url: '/wiki/cips/contribute/' },
+      { title: 'CIPS 负责人', url: '/wiki/cips/person-in-charge/', icon: 'user' },
+      { title: '联系我们', url: '/wiki/cips/contact/', icon: 'phone' },
+      { title: '加入我们', url: '/wiki/cips/contribute/', icon: 'users' },
     ],
   },
-] as const;
+];
 
 /** 页脚快捷链接，对应旧站 _includes/footer.html */
-export const FOOTER_LINKS = [
-  { title: '关于我们', url: '/wiki/intro/' },
-  { title: '联系我们', url: '/wiki/cips/contact/' },
-  { title: '加入我们', url: '/wiki/cips/contribute/' },
-  { title: 'RSS 订阅', url: '/feed/' },
-  { title: '本站仓库', url: SITE.repository, external: true },
-] as const;
+export const FOOTER_LINKS: NavItem[] = [
+  { title: '关于我们', url: '/wiki/intro/', icon: 'id-card' },
+  { title: '联系我们', url: '/wiki/cips/contact/', icon: 'phone' },
+  { title: '加入我们', url: '/wiki/cips/contribute/', icon: 'users' },
+  { title: 'RSS 订阅', url: '/feed/', icon: 'rss' },
+  { title: '本站仓库', url: SITE.repository, icon: 'git-branch', external: true },
+];
 
-/** 首页 / 404 页的服务入口磁贴，对应旧站 _pages/index.html 的 lug-nav */
-export const SERVICE_TILES = {
+/**
+ * 首页 / 404 页的服务入口磁贴，对应旧站 _pages/index.html 的 lug-nav。
+ * 图标沿用旧站的语义（企鹅=开源镜像站、电视=IPTV、光盘=PXE…），
+ * 但换成自绘 SVG（旧站用的 Font Awesome Pro 图标不能复制）。
+ */
+export const SERVICE_TILES: { left: Tile[]; right: Tile[] } = {
   left: [
-    { title: '开源镜像站', url: SITE.mirrors, color: 'red', external: true },
-    { title: 'IPTV', url: 'https://iptv.nyist.edu.cn/', color: 'green', external: true },
-    { title: 'PXE', url: 'https://pxe.nyist.edu.cn/', color: 'blue', external: true },
-    { title: '更多服务', url: '/wiki/cips/services/', color: 'yellow' },
+    { title: '开源镜像站', url: SITE.mirrors, icon: 'penguin', color: 'red', external: true },
+    { title: 'IPTV', url: 'https://iptv.nyist.edu.cn/', icon: 'tv', color: 'green', external: true },
+    { title: 'PXE', url: 'https://pxe.nyist.edu.cn/', icon: 'disc', color: 'blue', external: true },
+    { title: '更多服务', url: '/wiki/cips/services/', icon: 'chevron-right', color: 'yellow' },
   ],
   right: [
-    { title: '活动日历', url: '/wiki/cips/events/calendar/', color: 'red' },
-    { title: '联系我们', url: '/wiki/cips/contact/', color: 'green' },
-    { title: '捐赠我们', url: '/wiki/cips/finance/donate/', color: 'blue' },
-    { title: '友情链接', url: '/wiki/cips/links/', color: 'yellow' },
+    { title: '活动日历', url: '/wiki/cips/events/calendar/', icon: 'calendar', color: 'red' },
+    { title: '联系我们', url: '/wiki/cips/contact/', icon: 'comments', color: 'green' },
+    { title: '捐赠我们', url: '/wiki/cips/finance/donate/', icon: 'thumbs-up', color: 'blue' },
+    { title: '友情链接', url: '/wiki/cips/links/', icon: 'link', color: 'yellow' },
   ],
-} as const;
+};
 
 /** 首页右侧协会简介（取自旧站首页文案） */
 export const HOME_ABOUT = [

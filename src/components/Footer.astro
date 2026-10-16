@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { FOOTER_LINKS, SITE } from '../data/site';
 
 const year = new Date().getFullYear();
@@ -32,11 +33,9 @@ const buildDate = new Intl.DateTimeFormat('zh-CN', {
             {
               FOOTER_LINKS.map((item) => (
                 <li>
-                  <a
-                    href={item.url}
-                    {...('external' in item && item.external ? { target: '_blank', rel: 'noopener' } : {})}
-                  >
-                    {item.title}
+                  <a href={item.url} {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                    <Icon name={item.icon} size={15} />
+                    <span>{item.title}</span>
                   </a>
                 </li>
               ))

@@ -20,11 +20,11 @@ src/content/planet/      Planet 文章（Markdown）
 src/content/wiki/        Wiki 文档（Markdown，路径即 URL）
 src/data/site.ts         站点级配置：标题、导航、页脚链接、备案号（待补充）
 src/data/wiki-redirects.json  旧站 redirect_from 抽取出的跳转规则（58 条）
-src/components/          页面组件（Masthead / Footer / 列表 / 分页 / 侧栏…）
+src/components/          页面组件（Masthead / Footer / Icon / 列表 / 分页 / 侧栏…）
 src/layouts/             BaseLayout / PostLayout / WikiLayout
 src/pages/               路由：首页、404、news、planet、wiki、feed、categories、tags、sitemap
 src/styles/global.css    全站样式（手写 CSS，替代旧主题的 SCSS）
-src/utils/               URL 推导、日期排序、摘要、RSS 生成
+src/utils/               URL 推导、日期排序、摘要、RSS 生成、图标路径数据（icons.ts）
 public/static/           图片等静态资源（对应旧站 /static/...）
 public/robots.txt        robots.txt
 legacy/                  暂时无法转换的旧页面（按原路径复制进 dist/）
@@ -109,6 +109,35 @@ Token 可以是 Project Access Token（Role 至少 `Developer`，Scopes 勾 `wri
 | 新增 / 修改 Wiki 页面 | [`docs/templates/wiki.md`](docs/templates/wiki.md) |
 | 改站点标题、导航、页脚、备案号 | `src/data/site.ts` |
 | 改样式 | `src/styles/global.css` |
+| 改图标 / 加图标 | `src/utils/icons.ts` + `src/components/Icon.astro`（见下） |
+
+### 图标
+
+图标是一套自绘的内联 SVG（24×24 画布、线性描边、颜色跟随 `currentColor`），
+不依赖任何图标字体或 CDN。用法：
+
+```astro
+---
+import Icon from '../components/Icon.astro';
+---
+
+<Icon name="calendar" size={16} />
+```
+
+要加新图标，在 `src/utils/icons.ts` 的 `ICONS` 里加一条（键名即图标名，值是 24×24
+坐标系下的 SVG 片段），然后就能用 `<Icon name="新名字" />`；`IconName` 类型会自动约束
+`src/data/site.ts` 里的导航配置，写错名字会直接构建报错。
+
+旧站图标与新站图标的对应关系：
+
+| 位置 | 旧站（Font Awesome） | 新站 |
+| --- | --- | --- |
+| 主导航 | `fa-star-shooting` / `fa-newspaper` / `fa-planet-ringed` / `fa-github` / `fa-server` | `book` / `newspaper` / `planet` / `git-branch`（改为 GitLab）/ `server` |
+| Wiki 侧栏 | `fa-home`、`fa-link`、`fa-database`、`fa-sparkles`、`fa-envelope-open-text`、`fa-user-tie`、`fa-phone-alt`、`fa-users-medical`，三个服务页原本都是 `fa-server` | `home`、`link`、`database`、`sparkles`、`envelope`、`user`、`phone`、`users`，三个服务页区分为 `server` / `git-branch` / `deploy` |
+| 首页与 404 磁贴 | `fa-linux`、`fa-tv`、`fa-compact-disc`、`fa-chevron-circle-right`、`fa-calendar-alt`、`fa-comments`、`fa-thumbs-up`、`fa-link` | `penguin`、`tv`、`disc`、`chevron-right`、`calendar`、`comments`、`thumbs-up`、`link` |
+| 页脚 | `fa-address-card`、`fa-phone-alt`、`fa-users`、`fa-rss`、`fa-github` | `id-card`、`phone`、`users`、`rss`、`git-branch` |
+| 文章元信息 | `fa-calendar-alt`（日期）、`fa-clock`（阅读时长） | `calendar`（日期）、`user`（作者）、`link`（来源）；旧站未启用阅读时长，故未加 |
+| 正文 notice | 正文里手写 `<i class="fas fa-fw fa-exclamation-circle">` | 由 CSS 的 `mask` 贴 `info` / `alert` 图标（`global.css` 里的 `--icon-info` / `--icon-alert`），正文保持干净 |
 
 ### URL 规则（与旧站保持一致）
 
@@ -142,7 +171,7 @@ Token 可以是 Project Access Token（Role 至少 `Developer`，Scopes 勾 `wri
 | 项目 | 说明 |
 | --- | --- |
 | 样式 | 不再使用 minimal-mistakes 的 SCSS，改为手写 `src/styles/global.css`（视觉风格保持一致） |
-| 图标 | 移除了 Font Awesome 图标字体（正文与导航中的 `<i class="fa…">` 已清理） |
+| 图标 | 旧站用 Font Awesome Pro（`kit-pro.fontawesome.com` 的 kit + 未入库的 `_extra/fontawesome/`），其中 `fad` 双色与 `fa-star-shooting`、`fa-planet-ringed`、`fa-sparkles`、`fa-users-medical` 等属 Pro 专有内容，授权上不能复制其路径数据；新站改为**自绘的内联 SVG 图标集**（`src/utils/icons.ts` + `src/components/Icon.astro`），零依赖、无外部请求、颜色跟随 `currentColor`。旧站各处图标已按语义对应回来，见下 |
 | 站内搜索 | 旧站声明了 Algolia 但从未填入可用凭据，本次未迁移；如需站内搜索请另行确认方案 |
 | 评论 | 旧站未启用可用评论系统，未迁移 |
 | 代码格式化 | 不再使用 prettier（`.prettierignore` / `.prettierrc.json` 已删除） |

@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { plainExcerpt, postPath, type PostCollection, type PostEntry } from '../utils/content';
 
 interface Props {
@@ -28,9 +29,22 @@ const { entries, collection, heading, showExcerpt = true } = Astro.props;
             <a href={postPath(collection, entry)}>{entry.data.title}</a>
           </h3>
           <p class="archive__item-meta">
-            {entry.data.date}
-            {entry.data.author ? ` · ${entry.data.author}` : ''}
-            {entry.data.source ? ` · 来源：${entry.data.source}` : ''}
+            <span class="meta__item">
+              <Icon name="calendar" size={14} />
+              <time datetime={entry.data.date}>{entry.data.date}</time>
+            </span>
+            {entry.data.author && (
+              <span class="meta__item">
+                <Icon name="user" size={14} />
+                {entry.data.author}
+              </span>
+            )}
+            {entry.data.source && (
+              <span class="meta__item">
+                <Icon name="link" size={14} />
+                来源：{entry.data.source}
+              </span>
+            )}
           </p>
           {showExcerpt && <p class="archive__item-excerpt">{plainExcerpt(entry.body)}</p>}
         </li>

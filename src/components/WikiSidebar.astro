@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { WIKI_NAV } from '../data/site';
 
 const path = Astro.url.pathname;
@@ -14,7 +15,8 @@ const isActive = (url: string) => !url.startsWith('http') && url !== '/' && path
           {group.children.map((item) => (
             <li>
               <a href={item.url} class:list={[{ active: isActive(item.url) }]}>
-                {item.title}
+                <Icon name={item.icon} size={15} />
+                <span>{item.title}</span>
               </a>
             </li>
           ))}
