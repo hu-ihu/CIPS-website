@@ -1,0 +1,52 @@
+# Gitea Actions 备用配置。
+#
+# git.nyist.edu.cn 从仓库内证据看是 GitLab 实例（wiki/cips/services/gitlab 一页把
+# git.nyist.edu.cn 明确描述为 GitLab），因此主配置是仓库根目录的 .gitlab-ci.yml。
+# GitLab 完全不会读取 .gitea/ 目录，所以这个文件在 GitLab 上不会被触发，留着没有副作用。
+#
+# 如果登录页页脚显示 "Powered by Gitea"，说明推断错了：那就以本文件为准，
+# 并把 .gitlab-ci.yml 删掉（Gitea 也不会读它）。
+#
+# 需要配置的 Secret：仓库 Settings -> Actions -> Secrets 里加 PAGES_PUSH_TOKEN
+# （值是一个有 write 权限的访问令牌）。
+
+name: build-and-publish-pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    # TODO(待确认)：改成仓库 Runner 实际注册的标签。查看位置：
+    #   仓库 -> Settings -> Actions -> Runners（各 Runner 后面列出的 labels，常见如 ubuntu-latest）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24' # Astro 7 要求 Node >= 22.22.0
+          cache: npm
+
+      - name: install
+        run: npm ci
+
+      - name: type check
+        run: npm run check
+
+      - name: build
+        run: npm run build
+
+      # 把 dist/ 原样强推到 pages 分支；CD 侧监听 pages 即可，本仓库不负责部署。
+      - name: push dist to pages
+        env:
+          TOKEN: ${{ secrets.PAGES_PUSH_TOKEN }}
+        run: |
+          cd dist
+          git init -q -b pages
+          git add -A
+          git -c user.name="CIPS CI" -c user.email="cips@nyist.edu.cn" \
+              commit -q -m "chore: build ${GITHUB_SHA::8}"
+          git push -f "https://oauth2:${TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" pages

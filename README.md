@@ -32,7 +32,8 @@ scripts/postbuild.mjs    构建后处理：复制 legacy/、写 .nojekyll
 scripts/check-links.mjs  站内死链自检（零依赖）
 scripts/legacy/migrate-jekyll.mjs  一次性迁移脚本（旧站源码见本仓库首个提交）
 docs/templates/          如何新增 News / Planet / Wiki 页面
-.gitlab-ci.yml           CI：构建并把 dist/ 强推到 pages 分支
+.gitlab-ci.yml           CI：构建并把 dist/ 强推到 pages 分支（GitLab，主配置）
+.gitea/workflows/build.yml  CI 的 Gitea Actions 等价实现（备用，GitLab 不会读取）
 ```
 
 ## 本地开发与构建
@@ -60,17 +61,30 @@ node scripts/check-links.mjs   # 可选：检查 dist/ 里的站内链接是否�
 
 `pages` 分支由 CI 在每次 `main` 有新提交时强制覆盖，因此不要直接在 `pages` 上提交内容。
 
-## CI 配置（GitLab）
+## CI 配置
 
-git.nyist.edu.cn 是 **GitLab** 实例（参见 `wiki/cips/services/gitlab`），所以 CI 用
-[`.gitlab-ci.yml`](.gitlab-ci.yml)，流程是：
+**判定为 GitLab**：从仓库自身的证据看，[`src/content/wiki/cips/services/gitlab.md`](src/content/wiki/cips/services/gitlab.md)
+是协会自己给 `git.nyist.edu.cn` 写的介绍页，标题就叫「GitLab」，正文写「一切尽在 GitLab！」。
+因此主配置是 [`.gitlab-ci.yml`](.gitlab-ci.yml)：
 
 1. `build` 阶段：`npm ci` → `npm run check`（类型检查）→ `npm run build`，把 `dist/` 作为 artifact 上传；
 2. `deploy:pages` 阶段：进入 `dist/`，`git init -b pages`，提交后强推到远端 `pages` 分支。
 
+同时仓库里还放了一份 [`.gitea/workflows/build.yml`](.gitea/workflows/build.yml) 作为备用：
+GitLab 不读 `.gitea/`，Gitea 不读 `.gitlab-ci.yml`，两者互不干扰。若实际平台是 Gitea，
+以那份文件为准，并删掉 `.gitlab-ci.yml`。
+
+> 这两个配置文件都只能在**校园网内**的 git.nyist 上生效；开发环境访问不到该内网地址，
+> 所以平台和 Runner 标签只能由维护者在网页上确认（见下）。
+
+### 如何确认平台（约 10 秒）
+
+1. 打开 `https://git.nyist.edu.cn/`，看登录页页脚：`Powered by GitLab` 还是 `Powered by Gitea`；
+2. 进 `cips/cips-website` 仓库，看顶部菜单是 **CI/CD**（GitLab）还是 **Actions**（Gitea）。
+
 ### 需要配置的 Secret
 
-在 GitLab 仓库 **Settings → CI/CD → Variables** 添加：
+**GitLab**（若按上面的判定）：仓库 **Settings → CI/CD → Variables** 添加：
 
 | 变量名 | 值 | 说明 |
 | --- | --- | --- |
@@ -80,14 +94,20 @@ Token 可以是 Project Access Token（Role 至少 `Developer`，Scopes 勾 `wri
 或 Personal Access Token（同样需要 `write_repository`）。CI 里用
 `https://oauth2:${PAGES_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git` 推送。
 
+**Gitea**（若实际是 Gitea）：仓库 **Settings → Actions → Secrets** 添加同名 `PAGES_PUSH_TOKEN`。
+
 > 注意：`pages` 分支**不要**设为受保护分支（或允许该 Token 推送），否则强推会被拒绝。
 
-### 待确认的 CI 细节
+### Runner 标签怎么填
 
-- **Runner 标签**：`.gitlab-ci.yml` 里 `tags: []` 表示使用「不要求 tag」的共享 Runner。
-  如果学校的 Runner 配置了 tag（例如 `docker`、`shell`），请把实际 tag 填进去。
-- **CI 平台**：如果 git.nyist 实际不是 GitLab 而是 Gitea，请改用 Gitea Actions
-  （见文末「如果 CI 平台不是 GitLab」）。
+| 平台 | 去哪里看 | 填到哪 |
+| --- | --- | --- |
+| GitLab | 仓库 **Settings → CI/CD → Runners**，看每个 Runner 后面列出的 tag | `.gitlab-ci.yml` 的 `tags: []` |
+| Gitea | 仓库 **Settings → Actions → Runners**，看 Labels 列 | `.gitea/workflows/build.yml` 的 `runs-on:` |
+
+- 如果只有「不要求 tag」的共享 Runner，保持 `tags: []`（GitLab）/ `runs-on: ubuntu-latest`（Gitea）即可；
+- 如果 Runner 带 tag（例如 `docker`、`shell`、`gitea-runner-01`），**必须**照着填，否则作业会一直排队；
+- 拿不准就先不填跑一次，看是「排队等待」还是「找不到 Runner」，再按提示补。
 
 ## 部署（CD）
 
@@ -228,7 +248,8 @@ const news = defineCollection({
 
 以下内容需要站点负责人确认后填写，代码里都已标出位置：
 
-1. **CI 平台与 Runner 标签**：见上文「待确认的 CI 细节」。
+1. **CI 平台与 Runner 标签**：仓库内证据指向 GitLab，但需在校园网内打开 git.nyist 确认；
+   Runner 标签见上文「Runner 标签怎么填」。
 2. **`PAGES_PUSH_TOKEN`**：需要在 GitLab 仓库里创建并配置（见上文「需要配置的 Secret」）。
 3. **CD 侧监听 `pages` 分支的方式**：需要在学校 Web 服务器上配置。
 4. **站点信息**：`src/data/site.ts` 里的 `url`、`email`、`address`、`repository`、`mirrors`
@@ -248,38 +269,14 @@ const news = defineCollection({
 
 ## 如果 CI 平台不是 GitLab
 
-若 git.nyist 实际是 Gitea，则删除 `.gitlab-ci.yml`，改用 Gitea Actions
-（`.gitea/workflows/build.yml`，与 GitHub Actions 语法基本一致）：
+仓库里已经放好了等价的 Gitea Actions 配置：[`.gitea/workflows/build.yml`](.gitea/workflows/build.yml)
+（步骤与 `.gitlab-ci.yml` 一致：`npm ci` → `npm run check` → `npm run build` → 强推 `pages`）。
 
-```yaml
-name: build
-on:
-  push:
-    branches: [main]
-jobs:
-  build-and-push-pages:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run check
-      - run: npm run build
-      - name: push dist to pages
-        env:
-          TOKEN: ${{ secrets.PAGES_PUSH_TOKEN }}
-        run: |
-          cd dist
-          git init -q -b pages
-          git add -A
-          git -c user.name=CIPS -c user.email=cips@nyist.edu.cn commit -q -m "build ${GITHUB_SHA::8}"
-          git push -f "https://oauth2:${TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" pages
-```
-
-（该片段未在本环境验证，仅供平台切换时参考；Gitea 的 Secrets 名称同样用 `PAGES_PUSH_TOKEN`。）
+- GitLab 不会读取 `.gitea/`，所以这个文件留在仓库里不会有副作用；
+- 一旦确认是 Gitea：删掉 `.gitlab-ci.yml`，把 `PAGES_PUSH_TOKEN` 加到
+  仓库 **Settings → Actions → Secrets**，并按 **Settings → Actions → Runners** 的 Labels
+  改 `runs-on:` 即可；
+- 该文件未在本环境实际执行过（内网不可达），首次上线请留意第一条流水线的日志。
 
 ## 许可与致谢
 
