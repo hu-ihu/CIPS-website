@@ -8,11 +8,14 @@ const link = (item: { url: string; external?: boolean }) =>
   item.external ? { target: '_blank', rel: 'noopener' } : {};
 
 /**
- * 开源镜像站的 Tux 可以直接用官方矢量图：把 CC0 的 tux.svg（garrett/Tux，
- * 或 kernel.org/doc/Documentation/images/logo.svg）放到 public/static/tux.svg，
- * 构建时会自动改用它；没有这个文件就退回 src/utils/icons.ts 里自绘的 Tux。
+ * 开源镜像站直接用官方矢量 Tux（CC0，garrett/Tux，原始插画 Larry Ewing）。
+ * 放在 public/static/ 下的以下任一文件会被自动采用，都没有就退回
+ * src/utils/icons.ts 里自绘的 Tux。
  */
-const hasTuxFile = fs.existsSync(path.join(process.cwd(), 'public/static/tux.svg'));
+const TUX_CANDIDATES = ['public/static/tux.svg', 'public/static/tux-bw.svg'];
+const tuxFile = TUX_CANDIDATES.find((file) => fs.existsSync(path.join(process.cwd(), file)));
+/** public/static/tux-bw.svg -> /static/tux-bw.svg */
+const tuxSrc = tuxFile ? `/${tuxFile.replace(/^public\//, '')}` : null;
 ---
 
 <!-- 三段式：左磁贴块 | 右侧面板（简介 + 右磁贴块），详见 global.css 的 home tiles 段 -->
@@ -21,8 +24,8 @@ const hasTuxFile = fs.existsSync(path.join(process.cwd(), 'public/static/tux.svg
     {
       SERVICE_TILES.left.map((item) => (
         <a href={item.url} class={`tile tile--${item.color}`} {...link(item)}>
-          {item.icon === 'tile-mirror' && hasTuxFile ? (
-            <img class="tile__icon tile__icon--file" src="/static/tux.svg" alt="" width="44" height="44" />
+          {item.icon === 'tile-mirror' && tuxSrc ? (
+            <img class="tile__icon tile__icon--file" src={tuxSrc} alt="" width="44" height="44" />
           ) : (
             <Icon name={item.icon} size={44} strokeWidth={1.5} class="tile__icon" />
           )}

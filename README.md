@@ -153,9 +153,9 @@ import Icon from '../components/Icon.astro';
 水印素材由 `public/static/NYIST_logo.png` 处理而来：裁掉底部中文书法只留圆形校徽 → 白底转透明
 （`alpha = 255 - min(r, g, b)`）→ 统一染成品牌红 `#9e1111` → 缩到 240px 宽。换素材后按同样步骤重做。
 
-开源镜像站的 Tux 也支持直接换成**官方矢量图**：把 CC0 的 `tux.svg`（[garrett/Tux](https://github.com/garrett/Tux)，
-或 kernel.org 的 `doc/Documentation/images/logo.svg`）保存为 `public/static/tux.svg`，构建时会自动改用它
-（`ServiceTiles.astro` 里用 `fs.existsSync` 判断）；没有这个文件就退回 `src/utils/icons.ts` 里自绘的 Tux。
+开源镜像站的 Tux 直接用了**官方矢量图**：`public/static/tux-bw.svg`（[garrett/Tux](https://github.com/garrett/Tux)
+的线稿版，CC0）。`ServiceTiles.astro` 会在构建时检查 `public/static/tux.svg` 与 `public/static/tux-bw.svg`，
+命中哪个用哪个；两者都不存在就退回 `src/utils/icons.ts` 里自绘的 Tux。
 
 ### URL 规则（与旧站保持一致）
 
@@ -283,3 +283,8 @@ jobs:
 
 本仓库及本网站以 [CC BY-NC-SA 4.0](LICENSE.md) 许可协议开源。
 站点早期版本 fork 自中国科学技术大学 Linux 用户协会主页，感谢 USTC LUG 提供的主题模版。
+
+首页「开源镜像站」磁贴的 Tux 使用 [garrett/Tux](https://github.com/garrett/Tux) 的矢量版
+（`public/static/tux-bw.svg`）：原始插画 Larry Ewing（1996，GIMP），Garrett LeSage 用 Inkscape
+重绘，IFo Hancroft 整理润色，以 **CC0 1.0 公共领域**发布；kernel.org 的
+`doc/Documentation/images/logo.svg` 与之同源。其余图标为本站自绘。

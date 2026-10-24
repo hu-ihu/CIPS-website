@@ -324,8 +324,11 @@ img {
   transform: translateY(-2px);
 }
 
-/* 用外部 svg 文件当磁贴图标时（public/static/tux.svg）保持比例 */
+/* 用外部 svg 文件当磁贴图标时（public/static/tux-bw.svg）保持比例；
+   官方线稿自带留白，比其他扁平图标瘦一圈，因此略微放大补偿视觉重量 */
 .tile img.tile__icon {
+  width: 3.4rem;
+  height: 3.4rem;
   object-fit: contain;
 }
 
