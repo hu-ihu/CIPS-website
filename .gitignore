@@ -12,3 +12,8 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# 本地临时凭据（如推送用的 PAT），绝不入库
+.pat.txt
+.pat
+.tmp-token
