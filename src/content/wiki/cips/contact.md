@@ -4,7 +4,7 @@ title: "联系我们"
 
 ## 官方邮件地址
 
-![](/static/email.png)
+![协会官方邮件地址](/static/email.png)
 
 您可以向我们直接发送电子邮件。
 

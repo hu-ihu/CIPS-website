@@ -41,12 +41,16 @@ docs/templates/          如何新增 News / Planet / Wiki 页面
 
 ```bash
 npm ci            # 安装依赖（package-lock.json 已提交，CI 使用同一条命令）
-npm run dev       # 本地开发服务器 http://localhost:4321
 npm run check     # 类型检查（astro check，CI 里也会跑）
 npm run build     # 构建，产物在 dist/（含 postbuild 处理）
-npm run preview   # 预览 dist/
+npm run preview   # 预览 dist/ ← 本地看页面用这个（见下方说明）
 node scripts/check-links.mjs   # 可选：检查 dist/ 里的站内链接是否有死链
 ```
+
+> **`npm run dev` 当前不可用**：能启动、但随即报
+> `Failed to create the dev server app: require is not defined`（上游 Astro 7.4.x + Vite 8
+> 的 CJS 互操作问题，7.4.2 仍未修，详见「已知问题」）。本地预览请用
+> `npm run build && npm run preview`，改完内容重新 build 即可——只是没有 HMR 热更新。
 
 `npm run build` 之后，`dist/` 就是**可直接托管**的静态站点，用任意静态服务器
 （Nginx / Apache / `python -m http.server`）指向该目录即可，不需要 Node 运行时。
@@ -214,7 +218,7 @@ import Icon from '../components/Icon.astro';
 
 ## 已知问题
 
-Astro 7.4.0 + Vite 8.3.4 组合下，内容同步（`astro sync` / `astro build`）会用一个
+Astro 7.4.x + Vite 8.3.4 组合下，内容同步（`astro sync` / `astro build`）会用一个
 `ssr: { external: [] }` 的临时 Vite 服务器加载 `src/content.config.ts`；而
 `astro/loaders` 的 glob loader 会引入一批 CJS 依赖（`yaml`、`picomatch`、`tinyglobby`、
 `p-limit`、`piccolore`…），这些依赖被内联并按 ESM 求值，会直接报 `require is not defined`。
@@ -223,6 +227,11 @@ Astro 7.4.0 + Vite 8.3.4 组合下，内容同步（`astro sync` / `astro build`
 由 Astro 自己在 Node 原生上下文中创建 glob loader（`src/content.config.ts` 里只写 schema，
 不写 `loader`）。**功能与写法不受影响**，只是内容条目的 `id` 会带 `.md` 后缀，
 代码里已在 `src/utils/content.ts` 统一去掉。
+
+同一个根因还会让 **`astro dev` 起不来**：开发服务器创建 SSR handler 时报
+`Failed to create the dev server app: require is not defined`（`legacy` 开关只救了内容同步
+这一条路径，dev 的 SSR 打包仍会内联 CJS）。已在 7.4.0 和 7.4.2 上复现。
+所以本地预览用 `npm run build` + `npm run preview`；等上游修复后 `npm run dev` 会自然恢复。
 
 上游修复后可以改回显式写法：
 
@@ -241,8 +250,8 @@ const news = defineCollection({
 
 以下内容需要站点负责人确认后填写，代码里都已标出位置：
 
-1. **CI 平台与 Runner 标签**：仓库内证据指向 GitLab，但需在校园网内打开 git.nyist 确认；
-   Runner 标签见上文「Runner 标签怎么填」。
+1. **Runner 标签**：`.gitlab-ci.yml` 里是 `tags: []`，若作业一直 pending 就要按要求填实际 tag
+   （见上文「Runner 标签」）。
 2. **`PAGES_PUSH_TOKEN`**：需要在 GitLab 仓库里创建并配置（见上文「需要配置的 Secret」）。
 3. **CD 侧监听 `pages` 分支的方式**：需要在学校 Web 服务器上配置。
 4. **站点信息**：`src/data/site.ts` 里的 `url`、`email`、`address`、`repository`、`mirrors`

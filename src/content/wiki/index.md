@@ -44,7 +44,7 @@ permalink: "/wiki/"
 
 - QQ 群: 适合于即时性较强的讨论，较正式的讨论还请使用邮件列表。
 - 邮件列表: [点击此处了解详情](/wiki/cips/mailinglist)
-- 官方邮箱: ![](/static/email.png)
+- 官方邮箱: ![协会官方邮件地址](/static/email.png)
 - 活动室: 东南校区 13 教 211 室
 - 更多联系方式请 [戳这里](/wiki/cips/contact)
 
