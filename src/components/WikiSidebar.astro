@@ -14,7 +14,11 @@ const isActive = (url: string) => !url.startsWith('http') && url !== '/' && path
         <ul>
           {group.children.map((item) => (
             <li>
-              <a href={item.url} class:list={[{ active: isActive(item.url) }]}>
+              <a
+                href={item.url}
+                class:list={[{ active: isActive(item.url) }]}
+                aria-current={isActive(item.url) ? 'page' : undefined}
+              >
                 <Icon name={item.icon} size={15} />
                 <span>{item.title}</span>
               </a>

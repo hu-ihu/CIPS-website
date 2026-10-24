@@ -76,13 +76,14 @@ const imageUrl = new URL(image, SITE.url).href;
     <link rel="alternate" type="application/rss+xml" title="CIPS Planet" href="/feed/planet.xml" />
   </head>
   <body>
+    <a class="skip-link" href="#main">跳到主内容</a>
     <Masthead />
     {
       showHero && (
         <PageHero title={title} tagline={tagline} image={heroImage} filter={heroFilter} action={action} />
       )
     }
-    <main class={wide ? 'wrap wrap--wide' : 'wrap'}>
+    <main id="main" class={wide ? 'wrap wrap--wide' : 'wrap'}>
       <slot />
     </main>
     <Footer />

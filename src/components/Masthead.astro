@@ -20,6 +20,7 @@ const isActive = (url: string) => !url.startsWith('http') && (url === '/' ? path
               <a
                 href={item.url}
                 class:list={[{ active: isActive(item.url) }]}
+                aria-current={isActive(item.url) ? 'page' : undefined}
                 {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
               >
                 <Icon name={item.icon} size={17} />
