@@ -153,6 +153,10 @@ import Icon from '../components/Icon.astro';
 水印素材由 `public/static/NYIST_logo.png` 处理而来：裁掉底部中文书法只留圆形校徽 → 白底转透明
 （`alpha = 255 - min(r, g, b)`）→ 统一染成品牌红 `#9e1111` → 缩到 240px 宽。换素材后按同样步骤重做。
 
+开源镜像站的 Tux 也支持直接换成**官方矢量图**：把 CC0 的 `tux.svg`（[garrett/Tux](https://github.com/garrett/Tux)，
+或 kernel.org 的 `doc/Documentation/images/logo.svg`）保存为 `public/static/tux.svg`，构建时会自动改用它
+（`ServiceTiles.astro` 里用 `fs.existsSync` 判断）；没有这个文件就退回 `src/utils/icons.ts` 里自绘的 Tux。
+
 ### URL 规则（与旧站保持一致）
 
 - 文章：`/news/<年>/<月>/<标题 slug>/`，Planet 同理（前缀 `/planet/`）。

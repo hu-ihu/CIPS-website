@@ -324,6 +324,11 @@ img {
   transform: translateY(-2px);
 }
 
+/* 用外部 svg 文件当磁贴图标时（public/static/tux.svg）保持比例 */
+.tile img.tile__icon {
+  object-fit: contain;
+}
+
 .tile--red {
   --tile-accent: var(--microsoft-red);
 }
