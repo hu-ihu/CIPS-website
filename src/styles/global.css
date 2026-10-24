@@ -234,80 +234,78 @@ img {
 
 /* ------------------------------------------------------------ home tiles */
 
+/* 三段式布局，沿用旧站 _sass/content.scss 里 .lug-nav 的思路：
+     [左磁贴块] [右侧面板：简介 + 右磁贴块]
+   两块都是浅灰面板 + overflow:hidden 收圆角，磁贴之间不留间隙，
+   简介夹在两块磁贴中间——这样横向空间被用满，纵向也不会像单列那样被拉得很高。 */
 .lug-nav {
   display: flex;
-  flex-wrap: wrap;
+  align-items: stretch;
   gap: 1rem;
   margin: 1rem 0 2rem;
 }
 
-.lug-nav__left,
-.lug-nav__right {
-  flex: 1 1 20rem;
+.lug-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
+  flex: 0 0 auto;
+  /* 两块磁贴等宽（旧站是 min-width: 15rem），窄屏时在下面改成整行 */
+  width: 17rem;
+  background: var(--panel);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.lug-side {
+  display: flex;
+  align-items: stretch;
+  flex: 1 1 auto;
   min-width: 0;
   background: var(--panel);
   border-radius: var(--radius);
   overflow: hidden;
 }
 
-.lug-nav__left {
+.lug-about {
   display: flex;
-  padding: 0.6rem;
-}
-
-/* 左栏面板会被右栏（简介 + 磁贴）撑高，让 2×2 磁贴均分整块高度，
-   否则下方会留出一大片空面板 */
-.lug-nav__left .link-group {
-  flex: 1;
-  grid-auto-rows: 1fr;
-}
-
-.lug-nav__right {
-  display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 1rem;
-  background: transparent;
-}
-
-.lug-nav__about {
-  padding: 1rem;
-  background: var(--panel);
-  border-radius: var(--radius);
-}
-
-.lug-nav__about p {
-  margin: 0 0 0.75rem;
+  justify-content: center;
+  min-width: 0;
+  padding: 0.9rem 1.1rem;
   font-size: 0.9rem;
 }
 
-.lug-nav__about p:last-child {
+.lug-about p {
+  margin: 0 0 0.6rem;
+}
+
+.lug-about p:last-child {
   margin-bottom: 0;
 }
 
-.link-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
-}
-
-/* 服务磁贴：左侧浅色底、右侧留白，图标用各自的强调色。
-   旧站这里是 Font Awesome 的 fa-5x 图标 + bg-/fg-microsoft-* 工具类。 */
+/* 磁贴：图标 + 标签，块内无间隙 */
 .tile {
   --tile-accent: var(--text-muted);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  padding: 1.4rem 0.5rem;
+  gap: 0.45rem;
+  padding: 1rem 0.35rem;
   color: var(--text);
   text-align: center;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.3;
   transition: background-color 0.15s ease;
 }
 
+/* 图标尺寸用 rem，跟随全站字号断点缩放 */
 .tile .tile__icon {
+  width: 2.9rem;
+  height: 2.9rem;
   color: var(--tile-accent);
   transition: transform 0.15s ease;
 }
@@ -332,27 +330,45 @@ img {
   --tile-accent: var(--microsoft-yellow);
 }
 
-.lug-nav__left .tile {
+/* 左块：浅色底 + 深色标签 */
+.lug-tiles--solid .tile {
   background: color-mix(in srgb, var(--tile-accent) 12%, transparent);
 }
 
-.lug-nav__left .tile:hover {
+.lug-tiles--solid .tile:hover {
   background: color-mix(in srgb, var(--tile-accent) 22%, transparent);
 }
 
-.lug-nav__right .tile {
-  border-radius: var(--radius);
+/* 右块：无底色，图标与标签同色（对应旧站的 fg-microsoft-*） */
+.tile--plain {
+  color: var(--tile-accent);
 }
 
-.lug-nav__right .tile:hover {
+.tile--plain:hover {
   background: color-mix(in srgb, var(--tile-accent) 10%, transparent);
 }
 
-/* 宽屏时左栏磁贴更高，图标相应放大（旧站这里是 fa-5x 的大图标） */
-@media (min-width: 900px) {
-  .lug-nav__left .tile__icon {
-    width: 3.5rem;
-    height: 3.5rem;
+/* 中等宽度：收窄两块磁贴，给简介留出可读宽度 */
+@media (max-width: 1200px) {
+  .lug-tiles {
+    width: 14rem;
+  }
+}
+
+/* 窄屏：纵向堆叠，两块磁贴各占整行 */
+@media (max-width: 899px) {
+  .lug-nav,
+  .lug-side {
+    flex-direction: column;
+  }
+
+  .lug-tiles,
+  .lug-side {
+    width: 100%;
+  }
+
+  .lug-about {
+    padding: 1rem;
   }
 }
 

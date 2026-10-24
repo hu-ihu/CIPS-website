@@ -6,25 +6,24 @@ const link = (item: { url: string; external?: boolean }) =>
   item.external ? { target: '_blank', rel: 'noopener' } : {};
 ---
 
+<!-- 三段式：左磁贴块 | 右侧面板（简介 + 右磁贴块），详见 global.css 的 home tiles 段 -->
 <nav class="lug-nav" aria-label="服务入口">
-  <div class="lug-nav__left">
-    <div class="link-group">
-      {
-        SERVICE_TILES.left.map((item) => (
-          <a href={item.url} class={`tile tile--${item.color}`} {...link(item)}>
-            <Icon name={item.icon} size={44} strokeWidth={1.5} class="tile__icon" />
-            <span>{item.title}</span>
-          </a>
-        ))
-      }
-    </div>
+  <div class="lug-tiles lug-tiles--solid">
+    {
+      SERVICE_TILES.left.map((item) => (
+        <a href={item.url} class={`tile tile--${item.color}`} {...link(item)}>
+          <Icon name={item.icon} size={44} strokeWidth={1.5} class="tile__icon" />
+          <span>{item.title}</span>
+        </a>
+      ))
+    }
   </div>
 
-  <div class="lug-nav__right">
-    <div class="lug-nav__about">
+  <div class="lug-side">
+    <div class="lug-about">
       {HOME_ABOUT.map((paragraph) => <p>{paragraph}</p>)}
     </div>
-    <div class="link-group">
+    <div class="lug-tiles lug-tiles--plain">
       {
         SERVICE_TILES.right.map((item) => (
           <a href={item.url} class={`tile tile--${item.color} tile--plain`} {...link(item)}>

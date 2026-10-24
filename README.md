@@ -171,7 +171,7 @@ import Icon from '../components/Icon.astro';
 
 | 项目 | 说明 |
 | --- | --- |
-| 样式 | 不再使用 minimal-mistakes 的 SCSS，改为手写 `src/styles/global.css`（视觉风格保持一致） |
+| 样式 | 不再使用 minimal-mistakes 的 SCSS，改为手写 `src/styles/global.css`（视觉风格保持一致）。首页磁贴沿用旧站的三段式排布——左磁贴块 / 简介 / 右磁贴块，磁贴无间隙拼接、简介夹在中间，见 `global.css` 的 home tiles 段 |
 | 图标 | 旧站用 Font Awesome Pro（`kit-pro.fontawesome.com` 的 kit + 未入库的 `_extra/fontawesome/`），其中 `fad` 双色与 `fa-star-shooting`、`fa-planet-ringed`、`fa-sparkles`、`fa-users-medical` 等属 Pro 专有内容，授权上不能复制其路径数据；新站改为**自绘的内联 SVG 图标集**（`src/utils/icons.ts` + `src/components/Icon.astro`），零依赖、无外部请求、颜色跟随 `currentColor`。旧站各处图标已按语义对应回来，见下 |
 | 站内搜索 | 旧站声明了 Algolia 但从未填入可用凭据，本次未迁移；如需站内搜索请另行确认方案 |
 | 评论 | 旧站未启用可用评论系统，未迁移 |
