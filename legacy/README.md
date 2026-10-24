@@ -8,20 +8,27 @@
 `legacy/` 内的相对路径 = 站点根路径：
 
 ```
-legacy/wiki/cips/events/calendar/index.html
-        -> dist/wiki/cips/events/calendar/index.html
-        -> https://cips.nyist.edu.cn/wiki/cips/events/calendar/
+legacy/<路径>/index.html
+        -> dist/<路径>/index.html
+        -> https://cips.nyist.edu.cn/<路径>/
 ```
 
 只有 `.html` 文件会被复制（本 README 不会进入 `dist/`）。
 
 ## 当前内容
 
-| 旧路径 | 情况 |
-| --- | --- |
-| `/wiki/cips/events/calendar/` | 旧站首页与 404 页都链接到这里，但旧站源码里从来没有这个页面；先放占位页，待补真实内容 |
-| `/wiki/cips/finance/donate/` | 同上 |
+**目前为空。** 之前放在这里的两个占位页已经改写成正式页面：
 
-这两个页面在旧站源码中就不存在（属于历史遗留的死链），重建时保留路径并给出占位说明，
-避免访客撞上 404。补齐内容后，建议把它们改写成 `src/content/wiki/` 下的 Markdown 页面，
-然后删除这里的对应文件。
+| 旧路径 | 现在 |
+| --- | --- |
+| `/wiki/cips/events/calendar/` | `src/content/wiki/cips/events/calendar.md` |
+| `/wiki/cips/finance/donate/` | `src/content/wiki/cips/finance/donate.md` |
+
+这两个路径在旧站源码里从来没有对应文件（属于历史遗留的死链），当时先放占位 HTML 避免
+404；改成 wiki 页面后它们就能带上全站导航、侧栏与页脚，视觉上不再像"另一个网站"。
+两者的正文目前仍是待补充的占位内容。
+
+## 什么时候该用它
+
+只有在遇到**确实无法用 Markdown / Astro 重建**的旧页面（例如带大量内联脚本或旧式表单）
+时才往这里放文件。能改写的内容请优先放进 `src/content/`，它们才能享受统一的模板与样式。

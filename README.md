@@ -27,7 +27,7 @@ src/styles/global.css    全站样式（手写 CSS，替代旧主题的 SCSS）
 src/utils/               URL 推导、日期排序、摘要、RSS 生成、图标路径数据（icons.ts）
 public/static/           图片等静态资源（对应旧站 /static/...）
 public/robots.txt        robots.txt
-legacy/                  暂时无法转换的旧页面（按原路径复制进 dist/）
+legacy/                  暂时无法转换的旧页面（按原路径复制进 dist/，目前为空）
 scripts/postbuild.mjs    构建后处理：复制 legacy/、写 .nojekyll
 scripts/check-links.mjs  站内死链自检（零依赖）
 scripts/legacy/migrate-jekyll.mjs  一次性迁移脚本（旧站源码见本仓库首个提交）
@@ -125,8 +125,9 @@ import Icon from '../components/Icon.astro';
 ```
 
 要加新图标，在 `src/utils/icons.ts` 的 `ICONS` 里加一条（键名即图标名，值是 24×24
-坐标系下的 SVG 片段），然后就能用 `<Icon name="新名字" />`；`IconName` 类型会自动约束
-`src/data/site.ts` 里的导航配置，写错名字会直接构建报错。
+坐标系下的 SVG 片段），然后就能用 `<Icon name="新名字" />`；`IconName` 类型会约束
+`src/data/site.ts` 里的导航配置。另外 `Icon.astro` 里有构建期断言，图标名不存在会**直接
+让构建失败**并列出可用图标（项目没有装 `astro check` / `typescript`，用运行时断言达到同样效果）。
 
 旧站图标与新站图标的对应关系：
 
@@ -158,9 +159,9 @@ import Icon from '../components/Icon.astro';
 - 图片与附件从旧站的 `static/` 迁到 `public/static/`，正文里的
   `{{ site.static_url }}` 已改写为 `/static`（旧站 `static_url` 本身就是 `/static`）。
 - 旧站正文里的 `.md` 相对链接已按 Jekyll 规则改写成对应的绝对 URL。
-- 两个旧站源码中就不存在的死链页面（首页与 404 页有链接，但没有对应文件）放在 `legacy/`，
-  按原路径产出占位页：`/wiki/cips/events/calendar/`、`/wiki/cips/finance/donate/`。
-  补齐内容后建议改写成 `src/content/wiki/` 下的 Markdown，并删除 `legacy/` 中对应文件。
+- 两个旧站源码中就不存在的死链页面（首页与 404 页有链接，但没有对应文件）已补成正式页面：
+  `/wiki/cips/events/calendar/` 与 `/wiki/cips/finance/donate/`，文件在 `src/content/wiki/` 下，
+  因此带全站导航、侧栏与页脚；正文仍是待补充的占位内容。
 - 旧站的 Jekyll 源码（`_config.yml`、`_sass/`、`_includes/`、`_plugins/`、`_data/`、
   `pages/`、`static/` 等）已在本仓库**首个提交**中完整保留，需要对照旧内容时可用
   `git show <首个提交>:<路径>` 查看。`scripts/legacy/migrate-jekyll.mjs` 是当时的一次性迁移脚本，
@@ -176,8 +177,9 @@ import Icon from '../components/Icon.astro';
 | 评论 | 旧站未启用可用评论系统，未迁移 |
 | 代码格式化 | 不再使用 prettier（`.prettierignore` / `.prettierrc.json` 已删除） |
 | 仓库链接 | 导航与页脚不再出现 GitHub 链接，改为指向 git.nyist 的 GitLab |
-| 备案号 | 页脚按 os.nju.edu.cn 的结构保留了「ICP 备案 + 公安备案 + 更新时间 + Powered by Astro」，但**备案号是占位符**，见下 |
+| 备案号 | 页脚按 os.nju.edu.cn 的结构保留「ICP 备案 + 公安备案 + 更新时间 + Powered by Astro」。备案号沿用 **nyist.edu.cn 主站**（`cips.nyist.edu.cn` 是其子域），数值取自学校官网 www.nyist.edu.cn 页脚：`豫ICP备05011695号` / `豫公网安备 41130202000350号` |
 | 文章作者 | 旧站用 `_data/authors.yml` 做作者映射，新站直接在 front matter 写 `author` 字符串 |
+| 社交分享 / SEO | 旧站没有 Open Graph；新站补了 `og:*`、`twitter:*`、`theme-color`、`canonical`，文章页还会用自身 hero 图作为分享图，另有一张 1200×630 的默认分享图 `public/static/og-default.jpg` |
 
 ## 已知问题
 
@@ -208,19 +210,23 @@ const news = defineCollection({
 
 以下内容需要站点负责人确认后填写，代码里都已标出位置：
 
-1. **ICP 备案号与公安备案号**：`src/data/site.ts` 中的 `SITE.icp.number` 与
-   `SITE.police.number`，目前是占位符 `豫ICP备（待补充）号` / `豫公网安备（待补充）号`。
-   （旧站页脚里注释掉的 `皖ICP备05002528号` 是 USTC 的备案号，不能使用。）
-2. **CI 平台与 Runner 标签**：见上文「待确认的 CI 细节」。
-3. **`PAGES_PUSH_TOKEN`**：需要在 GitLab 仓库里创建并配置（见上文「需要配置的 Secret」）。
-4. **CD 侧监听 `pages` 分支的方式**：需要在学校 Web 服务器上配置。
-5. **站点信息**：`src/data/site.ts` 里的 `url`、`email`、`address`、`repository`、`mirrors`
+1. **CI 平台与 Runner 标签**：见上文「待确认的 CI 细节」。
+2. **`PAGES_PUSH_TOKEN`**：需要在 GitLab 仓库里创建并配置（见上文「需要配置的 Secret」）。
+3. **CD 侧监听 `pages` 分支的方式**：需要在学校 Web 服务器上配置。
+4. **站点信息**：`src/data/site.ts` 里的 `url`、`email`、`address`、`repository`、`mirrors`
    是否与现状一致。
-6. **`/wiki/cips/events/calendar/` 与 `/wiki/cips/finance/donate/` 的正文**：
-   目前是 `legacy/` 里的占位页。
-7. **占位新闻**：`src/content/news/2026-10-15-site-rebuild.md` 发布正式新闻后请删除。
-8. **首页文案与友情链接**：取自旧站，是否需要更新。
-9. **站内搜索 / 评论 / 统计**：如确有需要，请确认选用方案。
+5. **`/wiki/cips/events/calendar/` 与 `/wiki/cips/finance/donate/` 的正文**：
+   两个页面已改写成 `src/content/wiki/` 下的正式页面（带全站框架），但正文仍是占位内容。
+6. **占位新闻**：`src/content/news/2026-10-15-site-rebuild.md` 发布正式新闻后请删除。
+7. **首页文案与友情链接**：取自旧站，是否需要更新。
+8. **站内搜索 / 评论 / 统计**：如确有需要，请确认选用方案。
+
+已确认的项：
+
+- **备案号**：沿用 nyist.edu.cn 主站，`豫ICP备05011695号` / `豫公网安备 41130202000350号`
+  （取自学校官网页脚）。旧站页脚里注释掉的 `皖ICP备05002528号` 是 USTC 的，未采用。
+- **社交分享图**：默认图 `public/static/og-default.jpg`（1200×630），由深色蒙版 + 校园实景
+  + 标题与协会印章合成，需要换图时直接替换该文件即可。
 
 ## 如果 CI 平台不是 GitLab
 

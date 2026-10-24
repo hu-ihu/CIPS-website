@@ -11,6 +11,8 @@ interface Props {
   source?: string;
   categories?: string[];
   tags?: string[];
+  /** 正文摘要，用于 meta description 与社交分享 */
+  description?: string;
   /** 旧站 news 用 nyist-1.jpg，planet 用 galaxy-1.jpg，overlay_filter 均为 0.2 */
   heroImage?: string;
   heroFilter?: number;
@@ -24,6 +26,7 @@ const {
   source,
   categories = [],
   tags = [],
+  description,
   heroImage = collection === 'planet' ? '/static/splash/galaxy-1.jpg' : '/static/splash/nyist-1.jpg',
   heroFilter = 0.2,
 } = Astro.props;
@@ -34,7 +37,16 @@ const tagline = [date, author ? `作者：${author}` : '', source ? `来源：${
   .join(' · ');
 ---
 
-<BaseLayout title={title} showHero tagline={tagline} heroImage={heroImage} heroFilter={heroFilter}>
+<BaseLayout
+  title={title}
+  showHero
+  tagline={tagline}
+  heroImage={heroImage}
+  heroFilter={heroFilter}
+  description={description}
+  image={heroImage}
+  type="article"
+>
   <article class="prose">
     <div class="post__header">
       <h1>{title}</h1>

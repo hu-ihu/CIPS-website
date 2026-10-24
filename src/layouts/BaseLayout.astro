@@ -18,6 +18,10 @@ interface Props {
   /** 首页等宽版布局 */
   wide?: boolean;
   noindex?: boolean;
+  /** 社交分享图（站内路径或绝对 URL），默认用 SITE.ogImage */
+  image?: string;
+  /** og:type：文章页传 article */
+  type?: 'website' | 'article';
 }
 
 const {
@@ -30,10 +34,15 @@ const {
   action,
   wide = false,
   noindex = false,
+  image = SITE.ogImage,
+  type = 'website',
 } = Astro.props;
 
-const pageTitle = title ? `${title} - ${SITE.title}` : `${SITE.title} - ${SITE.subtitle}`;
+// 首页传的 title 与站点标题相同，避免出现「CIPS @ NYIST - CIPS @ NYIST」
+const pageTitle =
+  !title || title === SITE.title ? `${SITE.title} - ${SITE.subtitle}` : `${title} - ${SITE.title}`;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const imageUrl = new URL(image, SITE.url).href;
 ---
 
 <!doctype html>
@@ -44,8 +53,20 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#9e1111" />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={SITE.locale.replace('-', '_')} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
     <link rel="icon" href="/static/favicon/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/static/favicon/apple-icon.png" />

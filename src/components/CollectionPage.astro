@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostLayout from '../layouts/PostLayout.astro';
 import Paginator from './Paginator.astro';
 import PostList from './PostList.astro';
-import type { PostCollection, PostEntry } from '../utils/content';
+import { plainExcerpt, type PostCollection, type PostEntry } from '../utils/content';
 
 interface Props {
   kind: 'post' | 'list';
@@ -47,6 +47,7 @@ const pagePosts = posts.slice((page - 1) * perPage, page * perPage);
       source={entry.data.source}
       categories={entry.data.categories}
       tags={entry.data.tags}
+      description={plainExcerpt(entry.body, 150)}
       heroImage={heroImage}
     >
       {Content && <Content />}

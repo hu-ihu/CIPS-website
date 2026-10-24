@@ -3,9 +3,8 @@ import type { IconName } from '../utils/icons';
 /**
  * 站点级配置。
  *
- * 待补充项（见 README「需要补充的信息」）：
- * - icp.number / police.number：ICP 备案号与公安备案号
- * - repository：如果 git.nyist 上的组织/仓库名不是 cips/cips-website，请一并修改
+ * 备案号沿用 nyist.edu.cn 主站（cips.nyist.edu.cn 是其子域），数值取自学校官网
+ * www.nyist.edu.cn 页脚。仍需确认：repository 是否就是 git.nyist 上的 cips/cips-website。
  */
 export const SITE = {
   title: 'CIPS @ NYIST',
@@ -21,13 +20,15 @@ export const SITE = {
   repository: 'https://git.nyist.edu.cn/cips/cips-website',
   gitlab: 'https://git.nyist.edu.cn/',
   mirrors: 'https://mirror.nyist.edu.cn/',
+  /** 默认社交分享图（1200×630） */
+  ogImage: '/static/og-default.jpg',
   icp: {
-    number: '豫ICP备（待补充）号',
+    number: '豫ICP备05011695号',
     url: 'https://beian.miit.gov.cn/',
   },
   police: {
-    number: '豫公网安备（待补充）号',
-    url: 'https://beian.mps.gov.cn/',
+    number: '豫公网安备 41130202000350号',
+    url: 'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41130202000350',
   },
 } as const;
 

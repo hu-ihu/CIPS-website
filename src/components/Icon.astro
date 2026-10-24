@@ -12,6 +12,13 @@ interface Props {
 }
 
 const { name, size = 20, class: className, strokeWidth = 1.75 } = Astro.props;
+
+// 构建期守卫：图标名不存在时直接让构建失败，而不是静默渲染一个空 svg。
+// （项目没有装 astro check / typescript，用运行时断言拿到同样的报错效果。）
+const body = ICONS[name];
+if (!body) {
+  throw new Error(`未知图标 "${name}"，可用图标见 src/utils/icons.ts：${Object.keys(ICONS).join(', ')}`);
+}
 ---
 
 <svg
@@ -26,5 +33,5 @@ const { name, size = 20, class: className, strokeWidth = 1.75 } = Astro.props;
   stroke-linejoin="round"
   aria-hidden="true"
   focusable="false"
-  set:html={ICONS[name]}
+  set:html={body}
 />
