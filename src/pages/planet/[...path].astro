@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import CollectionPage from '../../components/CollectionPage.astro';
-import { postPath, published, sortByDateDesc } from '../../utils/content';
+import { postPath, published, sortByDateDesc, type PostEntry } from '../../utils/content';
 
 // 与 /news/ 同样的结构：一个 catch-all 产出文章页与分页列表页。
 // getStaticPaths 会被提升到模块作用域，常量必须定义在函数内部。
@@ -30,6 +30,15 @@ export async function getStaticPaths() {
   }
 
   return paths;
+}
+
+/** getStaticPaths 只会产出「单篇文章」或「分页列表」两种 props */
+interface Props {
+  kind: 'post' | 'list';
+  entry?: PostEntry;
+  page?: number;
+  totalPages?: number;
+  posts?: PostEntry[];
 }
 
 const { kind, entry, page, totalPages, posts } = Astro.props;

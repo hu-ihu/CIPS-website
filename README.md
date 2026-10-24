@@ -42,6 +42,7 @@ docs/templates/          如何新增 News / Planet / Wiki 页面
 ```bash
 npm ci            # 安装依赖（package-lock.json 已提交，CI 使用同一条命令）
 npm run dev       # 本地开发服务器 http://localhost:4321
+npm run check     # 类型检查（astro check，CI 里也会跑）
 npm run build     # 构建，产物在 dist/（含 postbuild 处理）
 npm run preview   # 预览 dist/
 node scripts/check-links.mjs   # 可选：检查 dist/ 里的站内链接是否有死链
@@ -64,7 +65,7 @@ node scripts/check-links.mjs   # 可选：检查 dist/ 里的站内链接是否�
 git.nyist.edu.cn 是 **GitLab** 实例（参见 `wiki/cips/services/gitlab`），所以 CI 用
 [`.gitlab-ci.yml`](.gitlab-ci.yml)，流程是：
 
-1. `build` 阶段：`npm ci` → `npm run build`，把 `dist/` 作为 artifact 上传；
+1. `build` 阶段：`npm ci` → `npm run check`（类型检查）→ `npm run build`，把 `dist/` 作为 artifact 上传；
 2. `deploy:pages` 阶段：进入 `dist/`，`git init -b pages`，提交后强推到远端 `pages` 分支。
 
 ### 需要配置的 Secret
@@ -127,7 +128,7 @@ import Icon from '../components/Icon.astro';
 要加新图标，在 `src/utils/icons.ts` 的 `ICONS` 里加一条（键名即图标名，值是 24×24
 坐标系下的 SVG 片段），然后就能用 `<Icon name="新名字" />`；`IconName` 类型会约束
 `src/data/site.ts` 里的导航配置。另外 `Icon.astro` 里有构建期断言，图标名不存在会**直接
-让构建失败**并列出可用图标（项目没有装 `astro check` / `typescript`，用运行时断言达到同样效果）。
+让构建失败**并列出可用图标（双保险：`IconName` 类型 + 运行时断言，`npm run check` 在 CI 里再卡一道）。
 
 旧站图标与新站图标的对应关系：
 
@@ -265,6 +266,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run check
       - run: npm run build
       - name: push dist to pages
         env:

@@ -8,10 +8,14 @@
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "dev": "astro dev",
+    "check": "astro check",
     "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview"
   },
   "devDependencies": {
-    "astro": "^7.4.0"
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.5",
+    "astro": "^7.4.0",
+    "typescript": "^6.0.3"
   }
 }

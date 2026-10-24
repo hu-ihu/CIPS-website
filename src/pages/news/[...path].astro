@@ -1,7 +1,16 @@
 ---
 import { getCollection } from 'astro:content';
 import CollectionPage from '../../components/CollectionPage.astro';
-import { postPath, published, sortByDateDesc } from '../../utils/content';
+import { postPath, published, sortByDateDesc, type PostEntry } from '../../utils/content';
+
+/** getStaticPaths 只会产出「单篇文章」或「分页列表」两种 props */
+interface Props {
+  kind: 'post' | 'list';
+  entry?: PostEntry;
+  page?: number;
+  totalPages?: number;
+  posts?: PostEntry[];
+}
 
 // 一个 catch-all 同时产出文章页与分页列表页（/news/、/news/2/），
 // 这样 /news/<年份>/<月份>/<slug>/ 与 /news/<页码>/ 不会形成两条互相冲突的动态路由。

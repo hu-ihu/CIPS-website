@@ -1,8 +1,15 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import WikiLayout from '../../layouts/WikiLayout.astro';
 import { wikiPath } from '../../utils/content';
 import redirects from '../../data/wiki-redirects.json';
+
+/** 同一路由产出真正的 wiki 页与旧站的跳转页两种 */
+interface Props {
+  kind: 'wiki' | 'redirect';
+  entry?: CollectionEntry<'wiki'>;
+  to?: string;
+}
 
 /**
  * Wiki 是站内固定文档。这里同时产出两类页面：
@@ -31,13 +38,13 @@ export async function getStaticPaths() {
 }
 
 const { kind, entry, to } = Astro.props;
-const rendered = kind === 'wiki' ? await render(entry) : null;
+const rendered = kind === 'wiki' && entry ? await render(entry) : null;
 const Content = rendered?.Content ?? null;
 const headings = rendered?.headings ?? [];
 ---
 
 {
-  kind === 'redirect' ? (
+  kind === 'redirect' && to ? (
     <html lang="zh-CN">
       <head>
         <meta charset="utf-8" />
@@ -52,9 +59,9 @@ const headings = rendered?.headings ?? [];
         </p>
       </body>
     </html>
-  ) : (
+  ) : entry ? (
     <WikiLayout title={entry.data.title} headings={headings} toc={entry.data.toc}>
       {Content && <Content />}
     </WikiLayout>
-  )
+  ) : null
 }
