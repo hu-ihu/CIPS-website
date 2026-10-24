@@ -135,10 +135,23 @@ import Icon from '../components/Icon.astro';
 | --- | --- | --- |
 | 主导航 | `fa-star-shooting` / `fa-newspaper` / `fa-planet-ringed` / `fa-github` / `fa-server` | `book` / `newspaper` / `planet` / `git-branch`（改为 GitLab）/ `server` |
 | Wiki 侧栏 | `fa-home`、`fa-link`、`fa-database`、`fa-sparkles`、`fa-envelope-open-text`、`fa-user-tie`、`fa-phone-alt`、`fa-users-medical`，三个服务页原本都是 `fa-server` | `home`、`link`、`database`、`sparkles`、`envelope`、`user`、`phone`、`users`，三个服务页区分为 `server` / `git-branch` / `deploy` |
-| 首页与 404 磁贴 | `fa-linux`、`fa-tv`、`fa-compact-disc`、`fa-chevron-circle-right`、`fa-calendar-alt`、`fa-comments`、`fa-thumbs-up`、`fa-link` | `penguin`、`tv`、`disc`、`chevron-right`、`calendar`、`comments`、`thumbs-up`、`link` |
+| 首页与 404 磁贴 | `fa-linux`、`fa-tv`、`fa-compact-disc`、`fa-chevron-circle-right`、`fa-calendar-alt`、`fa-comments`、`fa-thumbs-up`、`fa-link` | `tile-mirror`、`tile-iptv`、`tile-pxe`、`tile-more`、`tile-calendar`、`tile-contact`、`tile-donate`、`tile-links`（**彩色**，见下） |
 | 页脚 | `fa-address-card`、`fa-phone-alt`、`fa-users`、`fa-rss`、`fa-github` | `id-card`、`phone`、`users`、`rss`、`git-branch` |
 | 文章元信息 | `fa-calendar-alt`（日期）、`fa-clock`（阅读时长） | `calendar`（日期）、`user`（作者）、`link`（来源）；旧站未启用阅读时长，故未加 |
 | 正文 notice | 正文里手写 `<i class="fas fa-fw fa-exclamation-circle">` | 由 CSS 的 `mask` 贴 `info` / `alert` 图标（`global.css` 里的 `--icon-info` / `--icon-alert`），正文保持干净 |
+
+### 彩色磁贴图标与水印
+
+首页与 404 的 8 个服务磁贴用**彩色图标**（`tile-mirror`、`tile-calendar` 等），对应旧站那套 Font Awesome
+彩色/双色调图标。它们的填充色直接写在 `src/utils/icons.ts` 的路径上（`fill="#…"`），**不跟随
+`currentColor`**，所以磁贴的强调色只作用于底色与标签文字。其余位置的图标仍是单色描边、跟随文字颜色。
+
+页面背景还叠了一层**校徽水印**：`public/static/watermark.png` 平铺在 `body` 的 `background-image` 里，
+上面压了一层 96% 不透明的同色渐变，因此实际强度约 4%（见 `global.css` 的 `body` 规则）。想调强弱就改
+那层渐变的透明度；想只在首页出现，把这条 `background-image` 挪到 `.lug-nav::before` 之类的局部容器上即可。
+
+水印素材由 `public/static/NYIST_logo.png` 处理而来：裁掉底部中文书法只留圆形校徽 → 白底转透明
+（`alpha = 255 - min(r, g, b)`）→ 统一染成品牌红 `#9e1111` → 缩到 240px 宽。换素材后按同样步骤重做。
 
 ### URL 规则（与旧站保持一致）
 

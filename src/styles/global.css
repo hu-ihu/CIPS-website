@@ -66,7 +66,14 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  /* 校徽水印：叠一层与背景同色的半透明渐变，把图案压到约 6% 的强度；
+     图案由 static/NYIST_logo.png 生成（public/static/watermark.png） */
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(243, 246, 246, 0.96), rgba(243, 246, 246, 0.96)),
+    url('/static/watermark.png');
+  background-repeat: repeat;
+  background-size: auto, 7.5rem auto;
   overflow-x: hidden;
 }
 
@@ -239,6 +246,7 @@ img {
    两块都是浅灰面板 + overflow:hidden 收圆角，磁贴之间不留间隙，
    简介夹在两块磁贴中间——这样横向空间被用满，纵向也不会像单列那样被拉得很高。 */
 .lug-nav {
+  position: relative;
   display: flex;
   align-items: stretch;
   gap: 1rem;
@@ -246,6 +254,7 @@ img {
 }
 
 .lug-tiles {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 1fr;
@@ -258,6 +267,7 @@ img {
 }
 
 .lug-side {
+  position: relative;
   display: flex;
   align-items: stretch;
   flex: 1 1 auto;

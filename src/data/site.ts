@@ -117,16 +117,16 @@ export const FOOTER_LINKS: NavItem[] = [
  */
 export const SERVICE_TILES: { left: Tile[]; right: Tile[] } = {
   left: [
-    { title: '开源镜像站', url: SITE.mirrors, icon: 'penguin', color: 'red', external: true },
-    { title: 'IPTV', url: 'https://iptv.nyist.edu.cn/', icon: 'tv', color: 'green', external: true },
-    { title: 'PXE', url: 'https://pxe.nyist.edu.cn/', icon: 'disc', color: 'blue', external: true },
-    { title: '更多服务', url: '/wiki/cips/services/', icon: 'chevron-right', color: 'yellow' },
+    { title: '开源镜像站', url: SITE.mirrors, icon: 'tile-mirror', color: 'red', external: true },
+    { title: 'IPTV', url: 'https://iptv.nyist.edu.cn/', icon: 'tile-iptv', color: 'green', external: true },
+    { title: 'PXE', url: 'https://pxe.nyist.edu.cn/', icon: 'tile-pxe', color: 'blue', external: true },
+    { title: '更多服务', url: '/wiki/cips/services/', icon: 'tile-more', color: 'yellow' },
   ],
   right: [
-    { title: '活动日历', url: '/wiki/cips/events/calendar/', icon: 'calendar', color: 'red' },
-    { title: '联系我们', url: '/wiki/cips/contact/', icon: 'comments', color: 'green' },
-    { title: '捐赠我们', url: '/wiki/cips/finance/donate/', icon: 'thumbs-up', color: 'blue' },
-    { title: '友情链接', url: '/wiki/cips/links/', icon: 'link', color: 'yellow' },
+    { title: '活动日历', url: '/wiki/cips/events/calendar/', icon: 'tile-calendar', color: 'red' },
+    { title: '联系我们', url: '/wiki/cips/contact/', icon: 'tile-contact', color: 'green' },
+    { title: '捐赠我们', url: '/wiki/cips/finance/donate/', icon: 'tile-donate', color: 'blue' },
+    { title: '友情链接', url: '/wiki/cips/links/', icon: 'tile-links', color: 'yellow' },
   ],
 };
 
