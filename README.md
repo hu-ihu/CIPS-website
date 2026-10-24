@@ -32,8 +32,7 @@ scripts/postbuild.mjs    构建后处理：复制 legacy/、写 .nojekyll
 scripts/check-links.mjs  站内死链自检（零依赖）
 scripts/legacy/migrate-jekyll.mjs  一次性迁移脚本（旧站源码见本仓库首个提交）
 docs/templates/          如何新增 News / Planet / Wiki 页面
-.gitlab-ci.yml           CI：构建并把 dist/ 强推到 pages 分支（GitLab，主配置）
-.gitea/workflows/build.yml  CI 的 Gitea Actions 等价实现（备用，GitLab 不会读取）
+.gitlab-ci.yml           CI：构建并把 dist/ 强推到 pages 分支
 ```
 
 ## 本地开发与构建
@@ -61,30 +60,17 @@ node scripts/check-links.mjs   # 可选：检查 dist/ 里的站内链接是否�
 
 `pages` 分支由 CI 在每次 `main` 有新提交时强制覆盖，因此不要直接在 `pages` 上提交内容。
 
-## CI 配置
+## CI 配置（GitLab）
 
-**判定为 GitLab**：从仓库自身的证据看，[`src/content/wiki/cips/services/gitlab.md`](src/content/wiki/cips/services/gitlab.md)
-是协会自己给 `git.nyist.edu.cn` 写的介绍页，标题就叫「GitLab」，正文写「一切尽在 GitLab！」。
-因此主配置是 [`.gitlab-ci.yml`](.gitlab-ci.yml)：
+git.nyist.edu.cn 是 **GitLab** 实例（已由维护者确认；旧站的 `wiki/cips/services/gitlab` 一页
+也是把该域名描述为 GitLab）。CI 用 [`.gitlab-ci.yml`](.gitlab-ci.yml)，流程是：
 
 1. `build` 阶段：`npm ci` → `npm run check`（类型检查）→ `npm run build`，把 `dist/` 作为 artifact 上传；
 2. `deploy:pages` 阶段：进入 `dist/`，`git init -b pages`，提交后强推到远端 `pages` 分支。
 
-同时仓库里还放了一份 [`.gitea/workflows/build.yml`](.gitea/workflows/build.yml) 作为备用：
-GitLab 不读 `.gitea/`，Gitea 不读 `.gitlab-ci.yml`，两者互不干扰。若实际平台是 Gitea，
-以那份文件为准，并删掉 `.gitlab-ci.yml`。
-
-> 这两个配置文件都只能在**校园网内**的 git.nyist 上生效；开发环境访问不到该内网地址，
-> 所以平台和 Runner 标签只能由维护者在网页上确认（见下）。
-
-### 如何确认平台（约 10 秒）
-
-1. 打开 `https://git.nyist.edu.cn/`，看登录页页脚：`Powered by GitLab` 还是 `Powered by Gitea`；
-2. 进 `cips/cips-website` 仓库，看顶部菜单是 **CI/CD**（GitLab）还是 **Actions**（Gitea）。
-
 ### 需要配置的 Secret
 
-**GitLab**（若按上面的判定）：仓库 **Settings → CI/CD → Variables** 添加：
+仓库 **Settings → CI/CD → Variables** 添加：
 
 | 变量名 | 值 | 说明 |
 | --- | --- | --- |
@@ -94,20 +80,27 @@ Token 可以是 Project Access Token（Role 至少 `Developer`，Scopes 勾 `wri
 或 Personal Access Token（同样需要 `write_repository`）。CI 里用
 `https://oauth2:${PAGES_PUSH_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git` 推送。
 
-**Gitea**（若实际是 Gitea）：仓库 **Settings → Actions → Secrets** 添加同名 `PAGES_PUSH_TOKEN`。
-
 > 注意：`pages` 分支**不要**设为受保护分支（或允许该 Token 推送），否则强推会被拒绝。
 
-### Runner 标签怎么填
+### Runner 标签
 
-| 平台 | 去哪里看 | 填到哪 |
-| --- | --- | --- |
-| GitLab | 仓库 **Settings → CI/CD → Runners**，看每个 Runner 后面列出的 tag | `.gitlab-ci.yml` 的 `tags: []` |
-| Gitea | 仓库 **Settings → Actions → Runners**，看 Labels 列 | `.gitea/workflows/build.yml` 的 `runs-on:` |
+`.gitlab-ci.yml` 里现在是 `tags: []`，表示「不要求 tag」，会落到任意可用的共享 Runner 上。
 
-- 如果只有「不要求 tag」的共享 Runner，保持 `tags: []`（GitLab）/ `runs-on: ubuntu-latest`（Gitea）即可；
-- 如果 Runner 带 tag（例如 `docker`、`shell`、`gitea-runner-01`），**必须**照着填，否则作业会一直排队；
-- 拿不准就先不填跑一次，看是「排队等待」还是「找不到 Runner」，再按提示补。
+**如果作业一直处于 pending（排队）状态，就是 Runner 带了 tag。** 去仓库
+**Settings → CI/CD → Runners** 看每个 Runner 后面列出的 tag（例如 `docker`、`shell`），
+把 `.gitlab-ci.yml` 里的
+
+```yaml
+tags: []
+```
+
+改成
+
+```yaml
+tags: [实际tag1, 实际tag2]
+```
+
+即可（多个 tag 是「同时满足」的关系，通常填一个就够）。
 
 ## 部署（CD）
 
@@ -266,17 +259,7 @@ const news = defineCollection({
   （取自学校官网页脚）。旧站页脚里注释掉的 `皖ICP备05002528号` 是 USTC 的，未采用。
 - **社交分享图**：默认图 `public/static/og-default.jpg`（1200×630），由深色蒙版 + 校园实景
   + 标题与协会印章合成，需要换图时直接替换该文件即可。
-
-## 如果 CI 平台不是 GitLab
-
-仓库里已经放好了等价的 Gitea Actions 配置：[`.gitea/workflows/build.yml`](.gitea/workflows/build.yml)
-（步骤与 `.gitlab-ci.yml` 一致：`npm ci` → `npm run check` → `npm run build` → 强推 `pages`）。
-
-- GitLab 不会读取 `.gitea/`，所以这个文件留在仓库里不会有副作用；
-- 一旦确认是 Gitea：删掉 `.gitlab-ci.yml`，把 `PAGES_PUSH_TOKEN` 加到
-  仓库 **Settings → Actions → Secrets**，并按 **Settings → Actions → Runners** 的 Labels
-  改 `runs-on:` 即可；
-- 该文件未在本环境实际执行过（内网不可达），首次上线请留意第一条流水线的日志。
+- **CI 平台**：已确认 git.nyist 是 **GitLab**，CI 配置为 `.gitlab-ci.yml`（不再保留 Gitea 版本）。
 
 ## 许可与致谢
 
