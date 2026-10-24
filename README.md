@@ -282,7 +282,6 @@ jobs:
 ## 许可与致谢
 
 本仓库及本网站以 [CC BY-NC-SA 4.0](LICENSE.md) 许可协议开源。
-站点早期版本 fork 自中国科学技术大学 Linux 用户协会主页，感谢 USTC LUG 提供的主题模版。
 
 首页「开源镜像站」磁贴的 Tux 使用 [garrett/Tux](https://github.com/garrett/Tux) 的矢量版
 （`public/static/tux-bw.svg`）：原始插画 Larry Ewing（1996，GIMP），Garrett LeSage 用 Inkscape
