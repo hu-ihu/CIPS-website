@@ -89,22 +89,22 @@ Token 可以是 Project Access Token（Role 至少 `Developer`，Scopes 勾 `wri
 ### Runner 标签
 
 `.gitlab-ci.yml` 里现在是 `tags: []`，表示「不要求 tag」，会落到任意可用的共享 Runner 上。
+项目级的 **Settings → CI/CD → Runners** 页面上，共享 Runner 一栏**空着也不代表没有可用
+Runner**——共享 Runner 是实例级配置，只有 Admin Area 能看到全貌。
 
-**如果作业一直处于 pending（排队）状态，就是 Runner 带了 tag。** 去仓库
-**Settings → CI/CD → Runners** 看每个 Runner 后面列出的 tag（例如 `docker`、`shell`），
-把 `.gitlab-ci.yml` 里的
+**最快的判断方式是让流水线自己说。** 首次推送后如果作业一直 pending，卡住的作业页面会直接写明原因：
 
-```yaml
-tags: []
-```
+| 页面提示 | 含义 | 处理 |
+| --- | --- | --- |
+| `you don't have any runners online assigned to this project` | 实例没开共享 Runner，项目也没挂自己的 Runner | 找管理员注册 Runner（或给项目分配一个） |
+| `there are no runners that match all of the job's tags: docker` | 有 Runner，但它要求 tag，提示里**直接列出了 tag 名** | 把 `tags: []` 改成 `tags: [docker]` |
 
-改成
+即：第二条提示里冒号后面的词，就是要填进 `tags:` 的值。多个 tag 是「同时满足」的关系，
+一般填一个就够。
 
-```yaml
-tags: [实际tag1, 实际tag2]
-```
-
-即可（多个 tag 是「同时满足」的关系，通常填一个就够）。
+> 仓库首页侧栏出现「+ 配置 CI/CD」「+ 启用 Auto DevOps」之类的按钮，只说明**远端仓库里
+> 还没有 `.gitlab-ci.yml`**（首次推送前必然如此），与 Runner 无关。**不要点「启用 Auto DevOps」**，
+> 它会注入一套自己的 CI 逻辑，和本仓库的配置冲突。
 
 ## 部署（CD）
 
