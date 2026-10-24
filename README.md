@@ -164,9 +164,13 @@ import Icon from '../components/Icon.astro';
 彩色/双色调图标。它们的填充色直接写在 `src/utils/icons.ts` 的路径上（`fill="#…"`），**不跟随
 `currentColor`**，所以磁贴的强调色只作用于底色与标签文字。其余位置的图标仍是单色描边、跟随文字颜色。
 
-页面背景还叠了一层**校徽水印**：`public/static/watermark.png` 平铺在 `body` 的 `background-image` 里，
-上面压了一层 96% 不透明的同色渐变，因此实际强度约 4%（见 `global.css` 的 `body` 规则）。想调强弱就改
-那层渐变的透明度；想只在首页出现，把这条 `background-image` 挪到 `.lug-nav::before` 之类的局部容器上即可。
+页面背景还叠了一层**校徽水印**：`public/static/watermark.png` 以**单张大图、居中不重复**的
+方式贴在 `body` 的 `background-image` 里（尺寸 `min(72vmin, 680px)`，纵向 `26rem` 处避开 hero），
+上面压了一层 96% 不透明的同色渐变，因此实际强度约 4%（见 `global.css` 的 `body` 规则）。
+
+由于内容卡片（`.lug-tiles`、Wiki 侧栏、正文卡片）都是不透明背景，水印只在**页面背景露出来的地方**
+可见——首页磁贴下方、列表页正文区等；Wiki/文章页会被白色卡片挡住。想调强弱改那层渐变的透明度；
+想换成平铺纹理，把 `background-repeat` 改回 `repeat` 并给个较小的 `background-size` 即可。
 
 水印素材由 `public/static/NYIST_logo.png` 处理而来：裁掉底部中文书法只留圆形校徽 → 白底转透明
 （`alpha = 255 - min(r, g, b)`）→ 统一染成品牌红 `#9e1111` → 缩到 240px 宽。换素材后按同样步骤重做。

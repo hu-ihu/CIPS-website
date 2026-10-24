@@ -66,14 +66,19 @@ html {
 
 body {
   margin: 0;
-  /* 校徽水印：叠一层与背景同色的半透明渐变，把图案压到约 6% 的强度；
+  /* 校徽水印：单个大图案居中固定，叠一层与背景同色的半透明渐变把强度压到约 4%；
      图案由 static/NYIST_logo.png 生成（public/static/watermark.png） */
   background-color: var(--bg);
   background-image:
     linear-gradient(rgba(243, 246, 246, 0.96), rgba(243, 246, 246, 0.96)),
     url('/static/watermark.png');
-  background-repeat: repeat;
-  background-size: auto, 7.5rem auto;
+  background-repeat: no-repeat;
+  /* 纵向偏下放在内容区（hero 下方），否则整块会被 hero 图与磁贴面板挡住 */
+  background-position: center 26rem;
+  background-size:
+    cover,
+    min(72vmin, 680px) auto;
+  background-attachment: scroll;
   overflow-x: hidden;
 }
 
